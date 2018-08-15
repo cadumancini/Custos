@@ -6,6 +6,8 @@
 package Telas.Cadastros;
 
 import Tabelas.GrupoProduto;
+import Tabelas.Produto;
+import Telas.Consultas.ConsExis_GrupoProduto;
 import Util.HibernateUtil;
 import java.awt.KeyboardFocusManager;
 import java.awt.event.KeyEvent;
@@ -131,6 +133,11 @@ public class Cad_GrupoProduto extends javax.swing.JFrame {
         });
 
         BtnPesquisar.setText("...");
+        BtnPesquisar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BtnPesquisarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -223,36 +230,7 @@ public class Cad_GrupoProduto extends javax.swing.JFrame {
     private void TxtCodigoKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_TxtCodigoKeyTyped
         if(evt.getKeyChar()== KeyEvent.VK_ENTER || evt.getKeyChar() == KeyEvent.VK_TAB){
             if(!TxtCodigo.getText().isEmpty()){
-                habilitarCamposCadastro(true);
-                
-                //TODO: Pesquisar grupo existente para trazer descrição preenchida
-                try {
-                    conexao = HibernateUtil.openSession();
-                    
-                    Criteria crit = conexao.createCriteria(GrupoProduto.class);
-                    crit.add(Restrictions.eq("Codigo", TxtCodigo.getText()));
-                    List results = crit.list();
-                    if(results.size() > 0){
-                        BtnInserirAlterar.setText("Alterar");
-                        BtnExcluir.setEnabled(true);
-                        GrupoProduto grupo = (GrupoProduto) results.get(0);
-                        TxtDescricao.setText(grupo.getDescricao());
-                        id = grupo.getID();
-                    } else{
-                        BtnInserirAlterar.setText("Inserir");
-                        BtnExcluir.setEnabled(false);
-                        TxtDescricao.setText("");
-                        id = -1L;
-                    }
-                } catch(Exception ex){
-                    ex.printStackTrace();
-                    JOptionPane.showMessageDialog(this, "Operação mal sucedida. Motivo: " + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
-                } 
-                
-                TxtDescricao.requestFocusInWindow();
-                BtnInserirAlterar.setEnabled(true);
-                BtnCancelar.setEnabled(true);
-                
+                buscar(TxtCodigo.getText());
             } else{
                 JOptionPane.showMessageDialog(this, "O campo de Código não deve ficar vazio!", "Erro", JOptionPane.OK_OPTION);
                 TxtCodigo.requestFocusInWindow();
@@ -304,24 +282,29 @@ public class Cad_GrupoProduto extends javax.swing.JFrame {
             conexao = HibernateUtil.openSession();
             tx = conexao.beginTransaction();
             
-            // TODO: Checar se existe produto ligado ao grupo
-            
             GrupoProduto grupo = (GrupoProduto) conexao.get(GrupoProduto.class, id);
             
-            try {
-                if(grupo != null){
-                    conexao.delete(grupo);
-                    tx.commit();
-                } else{
-                    JOptionPane.showMessageDialog(this, "Impossível excluir. Grupo não encontrado", "Erro", JOptionPane.ERROR_MESSAGE);
+            // Checando se o grupo está ligado a algum produto:
+            Criteria crit = conexao.createCriteria(Produto.class);
+            crit.add(Restrictions.eq("Grupo", grupo));
+            List results = crit.list();
+            if(results.size() > 0)
+                JOptionPane.showMessageDialog(this, "Impossível excluir. Grupo ligado a pelo menos um Produto.", "Erro", JOptionPane.ERROR_MESSAGE);
+            else{
+                try {
+                    if(grupo != null){
+                        conexao.delete(grupo);
+                        tx.commit();
+                    } else
+                        JOptionPane.showMessageDialog(this, "Impossível excluir. Grupo não encontrado.", "Erro", JOptionPane.ERROR_MESSAGE);
+                    limparCampos();
+                    habilitarCamposCadastro(false);
+                    BtnExcluir.setEnabled(false);
+                } catch(Exception ex){
+                    tx.rollback();
+                    ex.printStackTrace();
+                    JOptionPane.showMessageDialog(this, "Operação mal sucedida. Motivo: " + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
                 }
-                limparCampos();
-                habilitarCamposCadastro(false);
-                BtnExcluir.setEnabled(false);
-            } catch(Exception ex){
-                tx.rollback();
-                ex.printStackTrace();
-                JOptionPane.showMessageDialog(this, "Operação mal sucedida. Motivo: " + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
             }
         }
     }//GEN-LAST:event_BtnExcluirActionPerformed
@@ -332,6 +315,49 @@ public class Cad_GrupoProduto extends javax.swing.JFrame {
         BtnExcluir.setEnabled(false);
     }//GEN-LAST:event_formWindowClosing
 
+    private void BtnPesquisarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnPesquisarActionPerformed
+        ConsExis_GrupoProduto janela = ConsExis_GrupoProduto.getInstance();
+        janela.setJanelaPai(this);
+        janela.alimentarTabela();
+        janela.setVisible(true);
+    }//GEN-LAST:event_BtnPesquisarActionPerformed
+
+    public void preencherCampos(String codigo){
+        TxtCodigo.setText(codigo);
+        buscar(codigo);
+    }
+    
+    private void buscar(String codigo){
+        habilitarCamposCadastro(true);
+                
+        try {
+            conexao = HibernateUtil.openSession();
+
+            Criteria crit = conexao.createCriteria(GrupoProduto.class);
+            crit.add(Restrictions.eq("Codigo", codigo));
+            List results = crit.list();
+            if(results.size() > 0){
+                BtnInserirAlterar.setText("Alterar");
+                BtnExcluir.setEnabled(true);
+                GrupoProduto grupo = (GrupoProduto) results.get(0);
+                TxtDescricao.setText(grupo.getDescricao());
+                id = grupo.getID();
+            } else{
+                BtnInserirAlterar.setText("Inserir");
+                BtnExcluir.setEnabled(false);
+                TxtDescricao.setText("");
+                id = -1L;
+            }
+        } catch(Exception ex){
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Operação mal sucedida. Motivo: " + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+        } 
+
+        TxtDescricao.requestFocusInWindow();
+        BtnInserirAlterar.setEnabled(true);
+        BtnCancelar.setEnabled(true);
+    }
+    
     private void limparCampos(){
         TxtCodigo.setText("");
         TxtDescricao.setText("");
