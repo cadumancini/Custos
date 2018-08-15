@@ -67,6 +67,11 @@ public class Cad_GrupoProduto extends javax.swing.JFrame {
         BtnPesquisar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jLabel1.setText("Cadastro de Grupos de Produtos");
@@ -76,12 +81,14 @@ public class Cad_GrupoProduto extends javax.swing.JFrame {
         jLabel2.setText("Código:");
 
         TxtDescricao.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        TxtDescricao.setNextFocusableComponent(BtnInserirAlterar);
 
         LblDescricao.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         LblDescricao.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         LblDescricao.setText("Descrição:");
 
         TxtCodigo.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        TxtCodigo.setNextFocusableComponent(TxtDescricao);
         TxtCodigo.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 TxtCodigoKeyTyped(evt);
@@ -90,6 +97,7 @@ public class Cad_GrupoProduto extends javax.swing.JFrame {
 
         BtnInserirAlterar.setText("Inserir");
         BtnInserirAlterar.setEnabled(false);
+        BtnInserirAlterar.setNextFocusableComponent(BtnCancelar);
         BtnInserirAlterar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 BtnInserirAlterarActionPerformed(evt);
@@ -98,6 +106,7 @@ public class Cad_GrupoProduto extends javax.swing.JFrame {
 
         BtnCancelar.setText("Cancelar");
         BtnCancelar.setEnabled(false);
+        BtnCancelar.setNextFocusableComponent(BtnExcluir);
         BtnCancelar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 BtnCancelarActionPerformed(evt);
@@ -106,6 +115,7 @@ public class Cad_GrupoProduto extends javax.swing.JFrame {
 
         BtnExcluir.setText("Excluir");
         BtnExcluir.setEnabled(false);
+        BtnExcluir.setNextFocusableComponent(BtnSair);
         BtnExcluir.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 BtnExcluirActionPerformed(evt);
@@ -113,6 +123,7 @@ public class Cad_GrupoProduto extends javax.swing.JFrame {
         });
 
         BtnSair.setText("Sair");
+        BtnSair.setNextFocusableComponent(TxtCodigo);
         BtnSair.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 BtnSairActionPerformed(evt);
@@ -192,8 +203,12 @@ public class Cad_GrupoProduto extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void BtnSairActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnSairActionPerformed
-        if(JOptionPane.showConfirmDialog(this, "Tem certeza que deseja sair?", "Confirmação", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION)
+        if(JOptionPane.showConfirmDialog(this, "Tem certeza que deseja sair?", "Confirmação", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION){
+            limparCampos();
+            habilitarCamposCadastro(false);
+            BtnExcluir.setEnabled(false);
             this.dispose();
+        }
     }//GEN-LAST:event_BtnSairActionPerformed
 
     private void BtnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnCancelarActionPerformed
@@ -310,6 +325,12 @@ public class Cad_GrupoProduto extends javax.swing.JFrame {
             }
         }
     }//GEN-LAST:event_BtnExcluirActionPerformed
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        limparCampos();
+        habilitarCamposCadastro(false);
+        BtnExcluir.setEnabled(false);
+    }//GEN-LAST:event_formWindowClosing
 
     private void limparCampos(){
         TxtCodigo.setText("");
