@@ -45,6 +45,9 @@ public class Produto implements Serializable {
     @Column(length=5, nullable=true)
     private String UnidadeMedida;
     
+    @Column(nullable=false)
+    private boolean Ativo;
+    
     @Column(nullable=true)
     private Double PrecoVenda;
 
@@ -100,19 +103,19 @@ public class Produto implements Serializable {
     private String Ncm;
 
     /**
-     * @return the id
+     * @return the ID
      */
-    public Long getId() {
+    public Long getID() {
         return ID;
     }
 
     /**
-     * @param id the id to set
+     * @param ID the ID to set
      */
-    public void setId(Long id) {
-        this.ID = id;
+    public void setID(Long ID) {
+        this.ID = ID;
     }
-
+    
     /**
      * @return the codigo
      */
@@ -476,6 +479,18 @@ public class Produto implements Serializable {
     public void setFornecedor3(Fornecedor Fornecedor3) {
         this.Fornecedor3 = Fornecedor3;
     }
-    
-    
+
+    /**
+     * @return the Ativo
+     */
+    public boolean isAtivo() {
+        return Ativo;
+    }
+
+    /**
+     * @param Ativo the Ativo to set
+     */
+    public void setAtivo(boolean Ativo) {
+        this.Ativo = Ativo;
+    }
 }
