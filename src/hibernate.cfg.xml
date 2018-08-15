@@ -48,7 +48,11 @@ Contributor(s):
     <property name="hibernate.connection.password">1123581321</property>
     <property name="hibernate.show_sql">false</property>
     <property name="hibernate.format_sql">true</property>
-    <property name="hibernate.hbm2ddl.auto">create</property>
+    <property name="hibernate.hbm2ddl.auto">update</property>
     <property name="hibernate.current_session_context_class">thread</property>
+    <mapping class="Tabelas.Fornecedor"/>
+    <mapping class="Tabelas.GrupoProduto"/>
+    <mapping class="Tabelas.Produto"/>
+    <mapping class="Tabelas.Componente"/>
   </session-factory>
 </hibernate-configuration>

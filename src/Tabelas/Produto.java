@@ -28,22 +28,18 @@ public class Produto implements Serializable {
     private String Descricao;
     
     @ManyToOne
-    @Column(nullable=false)
     private GrupoProduto Grupo;
 
     @OneToMany(mappedBy = "Modelo", targetEntity = Componente.class, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Componente> Componentes;
     
     @ManyToOne
-    @Column(nullable=true)
     private Fornecedor Fornecedor1;
     
     @ManyToOne
-    @Column(nullable=true)
     private Fornecedor Fornecedor2;
     
     @ManyToOne
-    @Column(nullable=true)
     private Fornecedor Fornecedor3;
 
     @Column(length=5, nullable=true)
