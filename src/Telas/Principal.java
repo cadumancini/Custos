@@ -5,6 +5,7 @@
  */
 package Telas;
 
+import Telas.Cadastros.Cad_Fornecedor;
 import Telas.Cadastros.Cad_GrupoProduto;
 
 /**
@@ -33,6 +34,7 @@ public class Principal extends javax.swing.JFrame {
     private void initComponents() {
 
         BtnGrupoProduto = new javax.swing.JButton();
+        BtnFornecedor = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -43,13 +45,22 @@ public class Principal extends javax.swing.JFrame {
             }
         });
 
+        BtnFornecedor.setText("Fornecedores");
+        BtnFornecedor.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BtnFornecedorActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(BtnGrupoProduto)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(BtnGrupoProduto, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(BtnFornecedor, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(496, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -57,7 +68,9 @@ public class Principal extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(BtnGrupoProduto)
-                .addContainerGap(336, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(BtnFornecedor)
+                .addContainerGap(307, Short.MAX_VALUE))
         );
 
         pack();
@@ -68,6 +81,12 @@ public class Principal extends javax.swing.JFrame {
         tela.setVisible(true);
         tela.setExtendedState(this.getExtendedState() | MAXIMIZED_BOTH);
     }//GEN-LAST:event_BtnGrupoProdutoActionPerformed
+
+    private void BtnFornecedorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnFornecedorActionPerformed
+        Cad_Fornecedor tela = Cad_Fornecedor.getInstance();
+        tela.setVisible(true);
+        tela.setExtendedState(this.getExtendedState() | MAXIMIZED_BOTH);
+    }//GEN-LAST:event_BtnFornecedorActionPerformed
 
     /**
      * @param args the command line arguments
@@ -105,6 +124,7 @@ public class Principal extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton BtnFornecedor;
     private javax.swing.JButton BtnGrupoProduto;
     // End of variables declaration//GEN-END:variables
 }
