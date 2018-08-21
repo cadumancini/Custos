@@ -133,6 +133,11 @@ public class ConsExis_GrupoProduto extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
+        TblGrupos.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                TblGruposMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(TblGrupos);
 
         BtnSelecionar.setText("Selecionar");
@@ -194,15 +199,26 @@ public class ConsExis_GrupoProduto extends javax.swing.JFrame {
     }//GEN-LAST:event_BtnCancelarActionPerformed
 
     private void BtnSelecionarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnSelecionarActionPerformed
-        int linha = TblGrupos.getSelectedRow();
-        janelaPai.preencherCampos(TblGrupos.getValueAt(linha, 0).toString());
-        this.dispose();
+        SelecionarRegistro();
     }//GEN-LAST:event_BtnSelecionarActionPerformed
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
           
     }//GEN-LAST:event_formWindowOpened
 
+    private void TblGruposMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_TblGruposMouseClicked
+        int linha = TblGrupos.getSelectedRow();
+        if(evt.getClickCount() == 2 && linha > -1){
+            SelecionarRegistro();
+        }
+    }//GEN-LAST:event_TblGruposMouseClicked
+
+    private void SelecionarRegistro(){
+        int linha = TblGrupos.getSelectedRow();
+        janelaPai.preencherCampos(TblGrupos.getValueAt(linha, 0).toString());
+        this.dispose();
+    }
+    
     /**
      * @param args the command line arguments
      */
