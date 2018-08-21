@@ -5,21 +5,46 @@
  */
 package Telas.Cadastros;
 
+import Tabelas.Fornecedor;
+import Tabelas.Produto;
+import Telas.Consultas.ConsExis_Fornecedor;
+import Util.HibernateUtil;
+import java.awt.KeyboardFocusManager;
 import java.awt.event.KeyEvent;
+import java.util.Collections;
+import java.util.List;
 import javax.swing.JOptionPane;
+import org.hibernate.Criteria;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+import org.hibernate.criterion.Criterion;
+import org.hibernate.criterion.Restrictions;
 
 /**
  *
  * @author cadum
  */
 public class Cad_Fornecedor extends javax.swing.JFrame {
-
+    private static Cad_Fornecedor instance = null;
+    private Long id;
+    Session conexao;
+    Transaction tx;
+    
     /**
      * Creates new form Cad_Fornecedor
      */
     public Cad_Fornecedor() {
         initComponents();
+        id = -1L;
+        habilitarCamposCadastro(false);
+        TxtCodigo.setFocusTraversalKeys(KeyboardFocusManager.FORWARD_TRAVERSAL_KEYS, Collections.EMPTY_SET); 
     }
+    
+    public static Cad_Fornecedor getInstance() {
+      if (instance == null)
+         instance = new Cad_Fornecedor();
+      return instance;
+   }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -32,72 +57,74 @@ public class Cad_Fornecedor extends javax.swing.JFrame {
 
         jLabel1 = new javax.swing.JLabel();
         jSeparator1 = new javax.swing.JSeparator();
-        jLabel2 = new javax.swing.JLabel();
+        LblCodigo = new javax.swing.JLabel();
         TxtCodigo = new javax.swing.JTextField();
-        jSeparator2 = new javax.swing.JSeparator();
-        LblDescricao = new javax.swing.JLabel();
-        TxtDescricao = new javax.swing.JTextField();
-        LblDescricao1 = new javax.swing.JLabel();
-        TxtDescricao1 = new javax.swing.JTextField();
-        LblDescricao2 = new javax.swing.JLabel();
-        TxtDescricao2 = new javax.swing.JTextField();
-        LblDescricao3 = new javax.swing.JLabel();
-        TxtDescricao3 = new javax.swing.JTextField();
-        LblDescricao4 = new javax.swing.JLabel();
-        TxtDescricao4 = new javax.swing.JTextField();
+        LblNome = new javax.swing.JLabel();
+        TxtNome = new javax.swing.JTextField();
+        LblEmail = new javax.swing.JLabel();
+        TxtEmail = new javax.swing.JTextField();
+        LblContato = new javax.swing.JLabel();
+        TxtContato = new javax.swing.JTextField();
+        LblCelular = new javax.swing.JLabel();
+        LblFixo = new javax.swing.JLabel();
         BtnInserirAlterar = new javax.swing.JButton();
         BtnCancelar = new javax.swing.JButton();
         BtnExcluir = new javax.swing.JButton();
         BtnSair = new javax.swing.JButton();
+        FTxtCelular = new javax.swing.JFormattedTextField();
+        FTxtFixo = new javax.swing.JFormattedTextField();
+        jSeparator3 = new javax.swing.JSeparator();
+        BtnPesquisar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jLabel1.setText("Cadastro de Fornecedores");
 
-        jLabel2.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel2.setText("Código:");
+        LblCodigo.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        LblCodigo.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        LblCodigo.setText("Código:");
 
         TxtCodigo.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        TxtCodigo.setNextFocusableComponent(TxtNome);
         TxtCodigo.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 TxtCodigoKeyTyped(evt);
             }
         });
 
-        LblDescricao.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        LblDescricao.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        LblDescricao.setText("Nome:");
+        LblNome.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        LblNome.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        LblNome.setText("Nome:");
 
-        TxtDescricao.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        TxtNome.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        TxtNome.setNextFocusableComponent(TxtEmail);
 
-        LblDescricao1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        LblDescricao1.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        LblDescricao1.setText("E-mail:");
+        LblEmail.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        LblEmail.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        LblEmail.setText("E-mail:");
 
-        TxtDescricao1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        TxtEmail.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        TxtEmail.setNextFocusableComponent(TxtContato);
 
-        LblDescricao2.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        LblDescricao2.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        LblDescricao2.setText("Contato:");
+        LblContato.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        LblContato.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        LblContato.setText("Contato:");
 
-        TxtDescricao2.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        TxtContato.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        TxtContato.setNextFocusableComponent(FTxtCelular);
 
-        LblDescricao3.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        LblDescricao3.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        LblDescricao3.setText("Celular:");
+        LblCelular.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        LblCelular.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        LblCelular.setText("Celular:");
 
-        TxtDescricao3.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-
-        LblDescricao4.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        LblDescricao4.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        LblDescricao4.setText("Telefone Fixo:");
-
-        TxtDescricao4.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        LblFixo.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        LblFixo.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        LblFixo.setText("Telefone Fixo:");
 
         BtnInserirAlterar.setText("Inserir");
         BtnInserirAlterar.setEnabled(false);
+        BtnInserirAlterar.setNextFocusableComponent(BtnCancelar);
         BtnInserirAlterar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 BtnInserirAlterarActionPerformed(evt);
@@ -106,6 +133,7 @@ public class Cad_Fornecedor extends javax.swing.JFrame {
 
         BtnCancelar.setText("Cancelar");
         BtnCancelar.setEnabled(false);
+        BtnCancelar.setNextFocusableComponent(BtnExcluir);
         BtnCancelar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 BtnCancelarActionPerformed(evt);
@@ -121,9 +149,33 @@ public class Cad_Fornecedor extends javax.swing.JFrame {
         });
 
         BtnSair.setText("Sair");
+        BtnSair.setNextFocusableComponent(BtnSair);
         BtnSair.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 BtnSairActionPerformed(evt);
+            }
+        });
+
+        try {
+            FTxtCelular.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("(##)#####-####")));
+        } catch (java.text.ParseException ex) {
+            ex.printStackTrace();
+        }
+        FTxtCelular.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        FTxtCelular.setNextFocusableComponent(FTxtFixo);
+
+        try {
+            FTxtFixo.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("(##)####-####")));
+        } catch (java.text.ParseException ex) {
+            ex.printStackTrace();
+        }
+        FTxtFixo.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        FTxtFixo.setNextFocusableComponent(BtnInserirAlterar);
+
+        BtnPesquisar.setText("...");
+        BtnPesquisar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BtnPesquisarActionPerformed(evt);
             }
         });
 
@@ -136,45 +188,46 @@ public class Cad_Fornecedor extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jSeparator1)
                     .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addGap(0, 458, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1)
                             .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                    .addComponent(LblDescricao3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(LblDescricao4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(TxtDescricao3, javax.swing.GroupLayout.PREFERRED_SIZE, 441, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(TxtDescricao4, javax.swing.GroupLayout.PREFERRED_SIZE, 441, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(LblDescricao1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(LblDescricao2, javax.swing.GroupLayout.DEFAULT_SIZE, 85, Short.MAX_VALUE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(TxtDescricao1, javax.swing.GroupLayout.PREFERRED_SIZE, 441, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(TxtDescricao2, javax.swing.GroupLayout.PREFERRED_SIZE, 441, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(LblDescricao, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 85, Short.MAX_VALUE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(TxtDescricao, javax.swing.GroupLayout.PREFERRED_SIZE, 441, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(TxtCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, 289, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(17, 17, 17)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(BtnInserirAlterar, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addGroup(layout.createSequentialGroup()
-                                        .addGap(1, 1, 1)
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                .addComponent(BtnCancelar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addComponent(BtnExcluir, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                            .addComponent(BtnSair, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addComponent(LblCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                        .addGap(0, 448, Short.MAX_VALUE)))
+                                        .addComponent(TxtCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(BtnPesquisar))
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                            .addComponent(LblEmail, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(LblContato, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(LblCelular, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(LblFixo, javax.swing.GroupLayout.Alignment.TRAILING)
+                                            .addComponent(LblNome, javax.swing.GroupLayout.Alignment.TRAILING))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                                .addComponent(TxtNome)
+                                                .addComponent(TxtEmail)
+                                                .addComponent(TxtContato, javax.swing.GroupLayout.PREFERRED_SIZE, 441, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                                .addComponent(FTxtFixo, javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addComponent(FTxtCelular, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 131, Short.MAX_VALUE)))))
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addComponent(jSeparator3))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(BtnInserirAlterar, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(1, 1, 1)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(BtnCancelar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(BtnExcluir, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(BtnSair, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE))))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -183,29 +236,32 @@ public class Cad_Fornecedor extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(TxtCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(BtnInserirAlterar))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 5, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(LblDescricao)
-                                .addComponent(TxtDescricao, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addComponent(TxtCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(LblCodigo))
+                            .addComponent(BtnPesquisar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, 2, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(LblDescricao1)
-                            .addComponent(TxtDescricao1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(LblNome)
+                            .addComponent(TxtNome, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(LblDescricao2)
-                            .addComponent(TxtDescricao2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(TxtEmail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(LblEmail))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(LblContato)
+                            .addComponent(TxtContato, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(layout.createSequentialGroup()
+                        .addComponent(BtnInserirAlterar)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(BtnCancelar)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(BtnExcluir)
@@ -213,13 +269,13 @@ public class Cad_Fornecedor extends javax.swing.JFrame {
                         .addComponent(BtnSair)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(LblDescricao3)
-                    .addComponent(TxtDescricao3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(LblCelular)
+                    .addComponent(FTxtCelular, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(LblDescricao4)
-                    .addComponent(TxtDescricao4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(75, Short.MAX_VALUE))
+                    .addComponent(LblFixo)
+                    .addComponent(FTxtFixo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(27, 27, 27))
         );
 
         pack();
@@ -242,29 +298,33 @@ public class Cad_Fornecedor extends javax.swing.JFrame {
     }//GEN-LAST:event_TxtCodigoKeyTyped
 
     private void BtnInserirAlterarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnInserirAlterarActionPerformed
-        if(TxtDescricao.getText().isEmpty()){
-            JOptionPane.showMessageDialog(this, "O campo de Descrição não deve ficar vazio!", "Erro", JOptionPane.OK_OPTION);
-            TxtDescricao.requestFocusInWindow();
+        if(TxtNome.getText().isEmpty()){
+            JOptionPane.showMessageDialog(this, "O campo de Nome não deve ficar vazio!", "Erro", JOptionPane.OK_OPTION);
+            TxtNome.requestFocusInWindow();
         } else{
             // Abrindo conexão:
             conexao = HibernateUtil.openSession();
             tx = conexao.beginTransaction();
 
-            GrupoProduto grupo = new GrupoProduto();
+            Fornecedor fornecedor = new Fornecedor();
             if(id != -1L)
-            grupo.setID(id);
-            grupo.setCodigo(TxtCodigo.getText());
-            grupo.setDescricao(TxtDescricao.getText());
+                fornecedor.setID(id);
+            fornecedor.setCodigo(TxtCodigo.getText());
+            fornecedor.setNome(TxtNome.getText());
+            fornecedor.setEmail(TxtEmail.getText());
+            fornecedor.setContato(TxtContato.getText());
+            fornecedor.setCelular(FTxtCelular.getText());
+            fornecedor.setTelefoneFixo(FTxtFixo.getText());
 
             // Persistindo objeto:
             try {
-                conexao.saveOrUpdate(grupo);
+                conexao.saveOrUpdate(fornecedor);
                 tx.commit();
                 TxtCodigo.requestFocusInWindow();
                 TxtCodigo.selectAll();
                 BtnExcluir.setEnabled(true);
                 habilitarCamposCadastro(false);
-                id = grupo.getID();
+                id = fornecedor.getID();
 
             } catch(Exception ex){
                 tx.rollback();
@@ -289,21 +349,25 @@ public class Cad_Fornecedor extends javax.swing.JFrame {
             conexao = HibernateUtil.openSession();
             tx = conexao.beginTransaction();
 
-            GrupoProduto grupo = (GrupoProduto) conexao.get(GrupoProduto.class, id);
+            Fornecedor fornecedor = (Fornecedor) conexao.get(Fornecedor.class, id);
 
-            // Checando se o grupo está ligado a algum produto:
+            // Checando se o fornecedor está ligado a algum produto:
             Criteria crit = conexao.createCriteria(Produto.class);
-            crit.add(Restrictions.eq("Grupo", grupo));
+            Criterion rest1 = Restrictions.eq("Fornecedor1", fornecedor);
+            Criterion rest2 = Restrictions.eq("Fornecedor2", fornecedor);
+            Criterion rest3 = Restrictions.eq("Fornecedor3", fornecedor);
+            crit.add(Restrictions.or(rest1, rest2, rest3));
+            
             List results = crit.list();
             if(results.size() > 0)
-            JOptionPane.showMessageDialog(this, "Impossível excluir. Grupo ligado a pelo menos um Produto.", "Erro", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Impossível excluir. Fornecedor ligado a pelo menos um Produto.", "Erro", JOptionPane.ERROR_MESSAGE);
             else{
                 try {
-                    if(grupo != null){
-                        conexao.delete(grupo);
+                    if(fornecedor != null){
+                        conexao.delete(fornecedor);
                         tx.commit();
                     } else
-                    JOptionPane.showMessageDialog(this, "Impossível excluir. Grupo não encontrado.", "Erro", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(this, "Impossível excluir. Fornecedor não encontrado.", "Erro", JOptionPane.ERROR_MESSAGE);
                     limparCampos();
                     habilitarCamposCadastro(false);
                     BtnExcluir.setEnabled(false);
@@ -325,6 +389,77 @@ public class Cad_Fornecedor extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_BtnSairActionPerformed
 
+    private void BtnPesquisarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnPesquisarActionPerformed
+        ConsExis_Fornecedor janela = ConsExis_Fornecedor.getInstance();
+        janela.setJanelaPai(this);
+        janela.alimentarTabela();
+        janela.setVisible(true);
+    }//GEN-LAST:event_BtnPesquisarActionPerformed
+
+    private void buscar(String codigo){
+        habilitarCamposCadastro(true);
+        try {
+            conexao = HibernateUtil.openSession();
+            Criteria crit = conexao.createCriteria(Fornecedor.class);
+            crit.add(Restrictions.eq("Codigo", codigo));
+            List results = crit.list();
+            if(results.size() > 0){
+                BtnInserirAlterar.setText("Alterar");
+                BtnExcluir.setEnabled(true);
+                Fornecedor fornecedor = (Fornecedor) results.get(0);
+                TxtNome.setText(fornecedor.getNome());
+                TxtEmail.setText(fornecedor.getEmail());
+                TxtContato.setText(fornecedor.getContato());
+                FTxtCelular.setText(fornecedor.getCelular());
+                FTxtFixo.setText(fornecedor.getTelefoneFixo());
+                id = fornecedor.getID();
+            } else{
+                BtnInserirAlterar.setText("Inserir");
+                BtnExcluir.setEnabled(false);
+                TxtNome.setText("");
+                id = -1L;
+            }
+        } catch(Exception ex){
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Operação mal sucedida. Motivo: " + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+        } 
+        conexao.close();
+        TxtNome.requestFocusInWindow();
+        BtnInserirAlterar.setEnabled(true);
+        BtnCancelar.setEnabled(true);
+    }
+    
+    public void preencherCampos(String codigo){
+        TxtCodigo.setText(codigo);
+        buscar(codigo);
+    }
+    
+    private void limparCampos(){
+        TxtCodigo.setText("");
+        TxtNome.setText("");
+        TxtEmail.setText("");
+        TxtContato.setText("");
+        FTxtCelular.setText("");
+        FTxtFixo.setText("");
+        TxtCodigo.requestFocusInWindow();
+        BtnInserirAlterar.setEnabled(false);
+        BtnInserirAlterar.setText("Inserir");
+        BtnCancelar.setEnabled(false);
+    }
+    
+    private void habilitarCamposCadastro(boolean valor){
+        LblNome.setEnabled(valor);
+        TxtNome.setEnabled(valor);
+        LblEmail.setEnabled(valor);
+        TxtEmail.setEnabled(valor);
+        LblContato.setEnabled(valor);
+        TxtContato.setEnabled(valor);
+        LblCelular.setEnabled(valor);
+        FTxtCelular.setEnabled(valor);
+        LblFixo.setEnabled(valor);
+        FTxtFixo.setEnabled(valor);
+    }
+    
     /**
      * @param args the command line arguments
      */
@@ -364,21 +499,22 @@ public class Cad_Fornecedor extends javax.swing.JFrame {
     private javax.swing.JButton BtnCancelar;
     private javax.swing.JButton BtnExcluir;
     private javax.swing.JButton BtnInserirAlterar;
+    private javax.swing.JButton BtnPesquisar;
     private javax.swing.JButton BtnSair;
-    private javax.swing.JLabel LblDescricao;
-    private javax.swing.JLabel LblDescricao1;
-    private javax.swing.JLabel LblDescricao2;
-    private javax.swing.JLabel LblDescricao3;
-    private javax.swing.JLabel LblDescricao4;
+    private javax.swing.JFormattedTextField FTxtCelular;
+    private javax.swing.JFormattedTextField FTxtFixo;
+    private javax.swing.JLabel LblCelular;
+    private javax.swing.JLabel LblCodigo;
+    private javax.swing.JLabel LblContato;
+    private javax.swing.JLabel LblEmail;
+    private javax.swing.JLabel LblFixo;
+    private javax.swing.JLabel LblNome;
     private javax.swing.JTextField TxtCodigo;
-    private javax.swing.JTextField TxtDescricao;
-    private javax.swing.JTextField TxtDescricao1;
-    private javax.swing.JTextField TxtDescricao2;
-    private javax.swing.JTextField TxtDescricao3;
-    private javax.swing.JTextField TxtDescricao4;
+    private javax.swing.JTextField TxtContato;
+    private javax.swing.JTextField TxtEmail;
+    private javax.swing.JTextField TxtNome;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JSeparator jSeparator1;
-    private javax.swing.JSeparator jSeparator2;
+    private javax.swing.JSeparator jSeparator3;
     // End of variables declaration//GEN-END:variables
 }
