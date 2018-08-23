@@ -7,6 +7,7 @@ package Telas;
 
 import Telas.Cadastros.Cad_Fornecedor;
 import Telas.Cadastros.Cad_GrupoProduto;
+import Telas.Cadastros.Cad_Produto;
 
 /**
  *
@@ -35,8 +36,10 @@ public class Principal extends javax.swing.JFrame {
 
         BtnGrupoProduto = new javax.swing.JButton();
         BtnFornecedor = new javax.swing.JButton();
+        BtnProduto = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Custos");
 
         BtnGrupoProduto.setText("Grupos de Produtos");
         BtnGrupoProduto.addActionListener(new java.awt.event.ActionListener() {
@@ -52,15 +55,24 @@ public class Principal extends javax.swing.JFrame {
             }
         });
 
+        BtnProduto.setText("Produtos");
+        BtnProduto.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BtnProdutoActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(BtnGrupoProduto, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(BtnFornecedor, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(BtnProduto, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(BtnGrupoProduto, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(BtnFornecedor, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap(496, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -70,7 +82,9 @@ public class Principal extends javax.swing.JFrame {
                 .addComponent(BtnGrupoProduto)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(BtnFornecedor)
-                .addContainerGap(307, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(BtnProduto)
+                .addContainerGap(278, Short.MAX_VALUE))
         );
 
         pack();
@@ -87,6 +101,13 @@ public class Principal extends javax.swing.JFrame {
         tela.setVisible(true);
         tela.setExtendedState(this.getExtendedState() | MAXIMIZED_BOTH);
     }//GEN-LAST:event_BtnFornecedorActionPerformed
+
+    private void BtnProdutoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnProdutoActionPerformed
+        Cad_Produto tela = Cad_Produto.getInstance();
+        tela.AtualizaCombos();
+        tela.setVisible(true);
+        tela.setExtendedState(this.getExtendedState() | MAXIMIZED_BOTH);
+    }//GEN-LAST:event_BtnProdutoActionPerformed
 
     /**
      * @param args the command line arguments
@@ -126,5 +147,6 @@ public class Principal extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton BtnFornecedor;
     private javax.swing.JButton BtnGrupoProduto;
+    private javax.swing.JButton BtnProduto;
     // End of variables declaration//GEN-END:variables
 }
