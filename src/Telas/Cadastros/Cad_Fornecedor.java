@@ -77,9 +77,11 @@ public class Cad_Fornecedor extends javax.swing.JFrame {
         BtnPesquisar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Cadastro de Fornecedores");
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jLabel1.setText("Cadastro de Fornecedores");
+        jLabel1.setToolTipText("");
 
         LblCodigo.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         LblCodigo.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);

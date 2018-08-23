@@ -69,6 +69,7 @@ public class Cad_GrupoProduto extends javax.swing.JFrame {
         BtnPesquisar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Cadastro de Grupos de Produtos");
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent evt) {
                 formWindowClosing(evt);
@@ -203,7 +204,7 @@ public class Cad_GrupoProduto extends javax.swing.JFrame {
                         .addComponent(BtnExcluir)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(BtnSair)
-                .addContainerGap(410, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
