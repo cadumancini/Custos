@@ -419,6 +419,10 @@ public class Cad_Fornecedor extends javax.swing.JFrame {
                 BtnInserirAlterar.setText("Inserir");
                 BtnExcluir.setEnabled(false);
                 TxtNome.setText("");
+                TxtEmail.setText("");
+                TxtContato.setText("");
+                FTxtCelular.setText("");
+                FTxtFixo.setText("");
                 id = -1L;
             }
         } catch(Exception ex){
