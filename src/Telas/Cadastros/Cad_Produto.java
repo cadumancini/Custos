@@ -586,7 +586,7 @@ public class Cad_Produto extends javax.swing.JFrame {
                             .addComponent(LblUniMed)
                             .addComponent(CmbUniMed, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addGroup(jPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(LblAtivo)
                             .addComponent(ChkAtivo))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -706,7 +706,7 @@ public class Cad_Produto extends javax.swing.JFrame {
 
     private void BtnPesquisarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnPesquisarActionPerformed
         ConsExis_Produto janela = ConsExis_Produto.getInstance();
-        janela.setJanelaPai(this);
+        janela.setJanelaPai(this, "CAD_PRO");
         janela.alimentarTabela();
         janela.setVisible(true);
     }//GEN-LAST:event_BtnPesquisarActionPerformed
@@ -1023,6 +1023,30 @@ public class Cad_Produto extends javax.swing.JFrame {
                 BtnInserirAlterar.setText("Inserir");
                 BtnExcluir.setEnabled(false);
                 TxtDescricao.setText("");
+                CmbGrupo.setSelectedIndex(0);
+                CmbFornecedor1.setSelectedIndex(0);
+                CmbFornecedor2.setSelectedIndex(0);
+                CmbFornecedor3.setSelectedIndex(0);
+                CmbUniMed.setSelectedIndex(0);
+                ChkAtivo.setSelected(false);
+                FTxtPrecoVenda.setText("0,00");
+                FTxtPrecoCusto.setText("0,00");
+                FTxtDevVendas.setText("0,00");
+                FTxtAbatVendas.setText("0,00");
+                FTxtComVendas.setText("0,00");
+                FTxtIcmsVendas.setText("0,00");
+                FTxtIpiVendas.setText("0,00");
+                FTxtPisVendas.setText("0,00");
+                FTxtCofinsVendas.setText("0,00");
+                FTxtSimplesVendas.setText("0,00");
+                FTxtIssVendas.setText("0,00");
+                FTxtIrVendas.setText("0,00");
+                FTxtCsllVendas.setText("0,00");
+                FTxtEmbalagem.setText("0,00");
+                FTxtFrete.setText("0,00");
+                FTxtOutrosInsumos.setText("0,00");
+                FTxtMargemContrib.setText("0,00");
+                TxtNcm.setText("");
                 id = -1L;
             }
         } catch(Exception ex){
