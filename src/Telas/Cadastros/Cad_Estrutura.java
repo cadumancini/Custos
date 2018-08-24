@@ -5,6 +5,7 @@
  */
 package Telas.Cadastros;
 
+import Tabelas.Componente;
 import Tabelas.Produto;
 import Util.HibernateUtil;
 import Telas.Consultas.ConsExis_Produto;
@@ -21,6 +22,7 @@ import javax.swing.table.TableColumnModel;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 
 /**
@@ -256,6 +258,7 @@ public class Cad_Estrutura extends javax.swing.JFrame {
     }//GEN-LAST:event_BtnPesquisarActionPerformed
 
     private void BtnInserirAlterarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnInserirAlterarActionPerformed
+        /*
         if(TxtDescricao.getText().isEmpty()){
             JOptionPane.showMessageDialog(this, "O campo de Descrição não deve ficar vazio!", "Erro", JOptionPane.OK_OPTION);
             TxtDescricao.requestFocusInWindow();
@@ -381,7 +384,7 @@ public class Cad_Estrutura extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(this, "Operação mal sucedida. Motivo: " + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
             }
             conexao.close();
-        }
+        } */
     }//GEN-LAST:event_BtnInserirAlterarActionPerformed
 
     private void BtnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnCancelarActionPerformed
@@ -393,40 +396,13 @@ public class Cad_Estrutura extends javax.swing.JFrame {
     }//GEN-LAST:event_BtnCancelarActionPerformed
 
     private void BtnExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnExcluirActionPerformed
+        /*
         if(JOptionPane.showConfirmDialog(this, "Tem certeza que deseja excluir?", "Confirmação", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION){
             conexao = HibernateUtil.openSession();
             tx = conexao.beginTransaction();
 
             Produto produto = (Produto) conexao.get(Produto.class, id);
 
-            // Checando se o produto está ligado a alguma tabela:
-            /*
-            Criteria crit = conexao.createCriteria(Produto.class);
-            Criterion rest1 = Restrictions.eq("Fornecedor1", fornecedor);
-            Criterion rest2 = Restrictions.eq("Fornecedor2", fornecedor);
-            Criterion rest3 = Restrictions.eq("Fornecedor3", fornecedor);
-            crit.add(Restrictions.or(rest1, rest2, rest3));
-
-            List results = crit.list();
-            if(results.size() > 0)
-            JOptionPane.showMessageDialog(this, "Impossível excluir. Fornecedor ligado a pelo menos um Produto.", "Erro", JOptionPane.ERROR_MESSAGE);
-            else{
-                try {
-                    if(fornecedor != null){
-                        conexao.delete(fornecedor);
-                        tx.commit();
-                    } else
-                    JOptionPane.showMessageDialog(this, "Impossível excluir. Fornecedor não encontrado.", "Erro", JOptionPane.ERROR_MESSAGE);
-                    limparCampos();
-                    habilitarCamposCadastro(false);
-                    BtnExcluir.setEnabled(false);
-                } catch(Exception ex){
-                    tx.rollback();
-                    ex.printStackTrace();
-                    JOptionPane.showMessageDialog(this, "Operação mal sucedida. Motivo: " + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
-                }
-            }
-            */
             try {
                 if(produto != null){
                     conexao.delete(produto);
@@ -441,7 +417,7 @@ public class Cad_Estrutura extends javax.swing.JFrame {
                 ex.printStackTrace();
                 JOptionPane.showMessageDialog(this, "Operação mal sucedida. Motivo: " + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
             }
-        }
+        } */
     }//GEN-LAST:event_BtnExcluirActionPerformed
 
     private void BtnSairActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnSairActionPerformed
@@ -460,144 +436,47 @@ public class Cad_Estrutura extends javax.swing.JFrame {
             Criteria crit = conexao.createCriteria(Produto.class);
             crit.add(Restrictions.eq("Codigo", codigo));
             List results = crit.list();
+            // Verificar se o Produto existe:
             if(results.size() > 0){
+                // Existe. Verificar se tem alguma estrutura cadastrada:
                 BtnInserirAlterar.setText("Alterar");
                 BtnExcluir.setEnabled(true);
                 Produto produto = (Produto) results.get(0);
-                TxtDescricao.setText(produto.getDescricao());
-                if(produto.getGrupo() != null)
-                    CmbGrupo.setSelectedItem(produto.getGrupo().getCodigo());
-                else
-                    CmbGrupo.setSelectedItem(0);
-                if(produto.getFornecedor1()!= null)
-                    CmbFornecedor1.setSelectedItem(produto.getFornecedor1().getCodigo());
-                else
-                    CmbFornecedor1.setSelectedItem(0);
-                if(produto.getFornecedor2()!= null)
-                    CmbFornecedor2.setSelectedItem(produto.getFornecedor2().getCodigo());
-                else
-                    CmbFornecedor1.setSelectedItem(0);
-                if(produto.getFornecedor3()!= null)
-                    CmbFornecedor3.setSelectedItem(produto.getFornecedor3().getCodigo());
-                else
-                    CmbFornecedor3.setSelectedItem(0);
-                CmbUniMed.setSelectedItem(produto.getUnidadeMedida());
-                ChkAtivo.setSelected(produto.isAtivo());
-                if(produto.getPrecoVenda() != null){
-                    FTxtPrecoVenda.setText(produto.getPrecoVenda().toString().replace('.', ','));
-                    if(produto.getPrecoVenda() - produto.getPrecoVenda().intValue() == 0)
-                        FTxtPrecoVenda.setText(FTxtPrecoVenda.getText() + "0");
+                Criteria crit2 = conexao.createCriteria(Componente.class);
+                crit2.add(Restrictions.eq("Modelo", produto));
+                crit2.addOrder(Order.asc("Sequencia"));
+                List<Componente> componentes = crit2.list();
+                if(componentes.size() > 0){
+                    // Existe estrutura cadastrada. Preencher tabela:
+                    int x = TblEstrutura.getRowCount();
+                    DefaultTableModel model = (DefaultTableModel) TblEstrutura.getModel();
+                    for(int i = 0; i < x; i++)
+                        model.removeRow(0);
+                    for(Componente cmp : componentes){
+                        String[] linha = new String[]{cmp.getSequencia().toString(),
+                                                      cmp.getComponente().getCodigo(),
+                                                      cmp.getComponente().getDescricao(),
+                                                      cmp.getQuantidade().toString()};
+                        model.addRow(linha);
+                    }
+                } else{
+                    // Não existe estrutura cadastrada.
+                    TblEstrutura.requestFocusInWindow();
+                    DefaultTableModel model = (DefaultTableModel) TblEstrutura.getModel();
+                    model.addRow(new String[]{"1", "", "", "0"});
                 }
-                else
-                    FTxtPrecoVenda.setText("0,00");
-                if(produto.getPrecoCusto() != null){
-                    FTxtPrecoCusto.setText(produto.getPrecoCusto().toString().replace('.', ','));
-                    if(produto.getPrecoCusto() - produto.getPrecoCusto().intValue() == 0)
-                        FTxtPrecoCusto.setText(FTxtPrecoCusto.getText() + "0");
-                }
-                else
-                    FTxtPrecoCusto.setText("0,00");
-                if(produto.getDevolucoesVendas()!= null)
-                    FTxtDevVendas.setText(produto.getDevolucoesVendas().toString().replace('.', ','));
-                else
-                    FTxtDevVendas.setText("0,00");
-                if(produto.getAbatimentosVendas()!= null)
-                    FTxtAbatVendas.setText(produto.getAbatimentosVendas().toString().replace('.', ','));
-                else
-                    FTxtAbatVendas.setText("0,00");
-                if(produto.getComissoesVendas()!= null)
-                    FTxtComVendas.setText(produto.getComissoesVendas().toString().replace('.', ','));
-                else
-                    FTxtComVendas.setText("0,00");
-                if(produto.getIcmsVendas()!= null)
-                    FTxtIcmsVendas.setText(produto.getIcmsVendas().toString().replace('.', ','));
-                else
-                    FTxtIcmsVendas.setText("0,00");
-                if(produto.getIpiVendas()!= null)
-                    FTxtIpiVendas.setText(produto.getIpiVendas().toString().replace('.', ','));
-                else
-                    FTxtIpiVendas.setText("0,00");
-                if(produto.getPisVendas()!= null)
-                    FTxtPisVendas.setText(produto.getPisVendas().toString().replace('.', ','));
-                else
-                    FTxtPisVendas.setText("0,00");
-                if(produto.getCofinsVendas()!= null)
-                    FTxtCofinsVendas.setText(produto.getCofinsVendas().toString().replace('.', ','));
-                else
-                    FTxtCofinsVendas.setText("0,00");
-                if(produto.getSimplesVendas()!= null)
-                    FTxtSimplesVendas.setText(produto.getSimplesVendas().toString().replace('.', ','));
-                else
-                    FTxtSimplesVendas.setText("0,00");
-                if(produto.getIssVendas()!= null)
-                    FTxtIssVendas.setText(produto.getIssVendas().toString().replace('.', ','));
-                else
-                    FTxtIssVendas.setText("0,00");
-                if(produto.getIrVendas()!= null)
-                    FTxtIrVendas.setText(produto.getIrVendas().toString().replace('.', ','));
-                else
-                    FTxtIrVendas.setText("0,00");
-                if(produto.getCsllVendas()!= null)
-                    FTxtCsllVendas.setText(produto.getCsllVendas().toString().replace('.', ','));
-                else
-                    FTxtCsllVendas.setText("0,00");
-                if(produto.getEmbalagem() != null)
-                    FTxtEmbalagem.setText(produto.getEmbalagem().toString().replace('.', ','));
-                else
-                    FTxtEmbalagem.setText("0,00");
-                if(produto.getFreteVendas()!= null)
-                    FTxtFrete.setText(produto.getFreteVendas().toString().replace('.', ','));
-                else
-                    FTxtFrete.setText("0,00");
-                if(produto.getOutrosInsumos() != null)
-                    FTxtOutrosInsumos.setText(produto.getOutrosInsumos().toString().replace('.', ','));
-                else
-                    FTxtOutrosInsumos.setText("0,00");
-                if(produto.getMargemContrib()!= null){
-                    FTxtMargemContrib.setText(produto.getMargemContrib().toString().replace('.', ','));
-                    if(produto.getMargemContrib() - produto.getMargemContrib().intValue() == 0)
-                        FTxtMargemContrib.setText(FTxtMargemContrib.getText() + "0");
-                }
-                else
-                    FTxtMargemContrib.setText("0,00");
-                TxtNcm.setText(produto.getNcm());
-                id = produto.getID();
+                
             } else{
-                BtnInserirAlterar.setText("Inserir");
-                BtnExcluir.setEnabled(false);
-                TxtDescricao.setText("");
-                CmbGrupo.setSelectedIndex(0);
-                CmbFornecedor1.setSelectedIndex(0);
-                CmbFornecedor2.setSelectedIndex(0);
-                CmbFornecedor3.setSelectedIndex(0);
-                CmbUniMed.setSelectedIndex(0);
-                ChkAtivo.setSelected(false);
-                FTxtPrecoVenda.setText("0,00");
-                FTxtPrecoCusto.setText("0,00");
-                FTxtDevVendas.setText("0,00");
-                FTxtAbatVendas.setText("0,00");
-                FTxtComVendas.setText("0,00");
-                FTxtIcmsVendas.setText("0,00");
-                FTxtIpiVendas.setText("0,00");
-                FTxtPisVendas.setText("0,00");
-                FTxtCofinsVendas.setText("0,00");
-                FTxtSimplesVendas.setText("0,00");
-                FTxtIssVendas.setText("0,00");
-                FTxtIrVendas.setText("0,00");
-                FTxtCsllVendas.setText("0,00");
-                FTxtEmbalagem.setText("0,00");
-                FTxtFrete.setText("0,00");
-                FTxtOutrosInsumos.setText("0,00");
-                FTxtMargemContrib.setText("0,00");
-                TxtNcm.setText("");
-                id = -1L;
+                JOptionPane.showMessageDialog(this, "Produto não encontrado!", "Erro", JOptionPane.ERROR_MESSAGE);
+                TxtCodigo.requestFocusInWindow();
+                TxtCodigo.selectAll();
             }
         } catch(Exception ex){
             ex.printStackTrace();
             JOptionPane.showMessageDialog(this, "Operação mal sucedida. Motivo: " + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
         } 
         conexao.close();
-        TxtDescricao.requestFocusInWindow();
+        TblEstrutura.requestFocusInWindow();
         BtnInserirAlterar.setEnabled(true);
         BtnCancelar.setEnabled(true);
     }
