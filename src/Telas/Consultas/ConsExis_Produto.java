@@ -72,6 +72,7 @@ public class ConsExis_Produto extends javax.swing.JFrame {
     }
     
     public void setJanelaPai(JFrame pai, String paiSrc){
+        this.pai = paiSrc;
         if(paiSrc.equals("CAD_PRO"))
             janelaPai_CadProduto = (Cad_Produto) pai;
         else if(paiSrc.equals("CAD_ESTR"))
@@ -225,6 +226,8 @@ public class ConsExis_Produto extends javax.swing.JFrame {
         int linha = TblProdutos.getSelectedRow();
         if(pai.equals("CAD_PRO"))
             janelaPai_CadProduto.preencherCampos(TblProdutos.getValueAt(linha, 0).toString());
+        else if(pai.equals("CAD_ESTR"))
+            janelaPai_CadEstrutura.preencherCampos(TblProdutos.getValueAt(linha, 0).toString());
         this.dispose();
     }
     
