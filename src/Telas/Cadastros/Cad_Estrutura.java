@@ -432,6 +432,10 @@ public class Cad_Estrutura extends javax.swing.JFrame {
     private void buscar(String codigo){
         habilitarCamposCadastro(true);
         try {
+            int x = TblEstrutura.getRowCount();
+            DefaultTableModel model = (DefaultTableModel) TblEstrutura.getModel();
+            for(int i = 0; i < x; i++)
+                model.removeRow(0);
             conexao = HibernateUtil.openSession();
             Criteria crit = conexao.createCriteria(Produto.class);
             crit.add(Restrictions.eq("Codigo", codigo));
@@ -448,24 +452,23 @@ public class Cad_Estrutura extends javax.swing.JFrame {
                 List<Componente> componentes = crit2.list();
                 if(componentes.size() > 0){
                     // Existe estrutura cadastrada. Preencher tabela:
-                    int x = TblEstrutura.getRowCount();
-                    DefaultTableModel model = (DefaultTableModel) TblEstrutura.getModel();
-                    for(int i = 0; i < x; i++)
-                        model.removeRow(0);
                     for(Componente cmp : componentes){
-                        String[] linha = new String[]{cmp.getSequencia().toString(),
+                        Object[] linha = new Object[]{cmp.getSequencia(),
                                                       cmp.getComponente().getCodigo(),
                                                       cmp.getComponente().getDescricao(),
-                                                      cmp.getQuantidade().toString()};
+                                                      cmp.getQuantidade()};
                         model.addRow(linha);
                     }
                 } else{
                     // Não existe estrutura cadastrada.
-                    TblEstrutura.requestFocusInWindow();
-                    DefaultTableModel model = (DefaultTableModel) TblEstrutura.getModel();
-                    model.addRow(new String[]{"1", "", "", "0"});
+                    Object[] linha = new Object[]{null,"","",null};
+                    model.addRow(linha);
                 }
                 
+                resizeColumnWidth(TblEstrutura);
+                TblEstrutura.requestFocusInWindow();
+                BtnInserirAlterar.setEnabled(true);
+                BtnCancelar.setEnabled(true);
             } else{
                 JOptionPane.showMessageDialog(this, "Produto não encontrado!", "Erro", JOptionPane.ERROR_MESSAGE);
                 TxtCodigo.requestFocusInWindow();
@@ -476,9 +479,6 @@ public class Cad_Estrutura extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Operação mal sucedida. Motivo: " + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
         } 
         conexao.close();
-        TblEstrutura.requestFocusInWindow();
-        BtnInserirAlterar.setEnabled(true);
-        BtnCancelar.setEnabled(true);
     }
     
     public void resizeColumnWidth(JTable table) {
