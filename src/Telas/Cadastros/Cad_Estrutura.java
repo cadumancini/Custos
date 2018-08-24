@@ -11,11 +11,16 @@ import Util.HibernateUtil;
 import Telas.Consultas.ConsExis_Produto;
 import java.awt.Component;
 import java.awt.KeyboardFocusManager;
+import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.util.Collections;
 import java.util.List;
+import javax.swing.AbstractAction;
+import javax.swing.ActionMap;
+import javax.swing.InputMap;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
+import javax.swing.KeyStroke;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
@@ -42,6 +47,59 @@ public class Cad_Estrutura extends javax.swing.JFrame {
         limparCampos();
         habilitarCamposCadastro(false);
         TxtCodigo.setFocusTraversalKeys(KeyboardFocusManager.FORWARD_TRAVERSAL_KEYS, Collections.EMPTY_SET); 
+        InputMap im = TblEstrutura.getInputMap();
+        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "Action.NextCell");
+        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_TAB, 0), "Action.NextCell");
+
+        ActionMap am = TblEstrutura.getActionMap();
+        am.put("Action.NextCell", new NextCellActioin(TblEstrutura));
+    }
+    
+    public class NextCellActioin extends AbstractAction {
+
+        private JTable table;
+        public NextCellActioin(JTable table) {
+            this.table = table;
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            int col = table.getSelectedColumn();
+            int row = table.getSelectedRow();
+            int colCount = table.getColumnCount();
+            int rowCount = table.getRowCount();
+
+            if(col == 1){
+                String codigoProduto = table.getValueAt(row, col).toString();
+                // Verificando se o produto existe:
+                conexao = HibernateUtil.openSession();
+                Criteria crit = conexao.createCriteria(Produto.class);
+                crit.add(Restrictions.eq("Codigo", codigoProduto));
+                List results = crit.list();
+                // Verificar se o Produto existe:
+                if(results.size() > 0){
+                    Produto prod = (Produto) results.get(0);
+                    table.setValueAt(prod.getDescricao(), row, (col + 1));
+                } else{
+                    JOptionPane.showMessageDialog(instance, "Produto não encontrado!", "Erro", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+            }
+            
+            col++;
+            if (col >= colCount) {
+                col = 0;
+                row++;
+            }
+
+            if (row >= rowCount) {
+                row = 0;
+            }
+
+            table.getSelectionModel().setSelectionInterval(row, row);
+            table.getColumnModel().getSelectionModel().setSelectionInterval(col, col);
+        }
+
     }
     
     public static Cad_Estrutura getInstance() {
