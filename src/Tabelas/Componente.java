@@ -25,6 +25,9 @@ public class Componente implements Serializable {
     private Produto Modelo;
     
     @Column(nullable=false)
+    private Long Sequencia;
+    
+    @Column(nullable=false)
     private Produto Componente; 
     
     @Column(nullable=false)
@@ -84,5 +87,19 @@ public class Componente implements Serializable {
      */
     public void setComponente(Produto componente) {
         this.Componente = componente;
+    }
+
+    /**
+     * @return the Sequencia
+     */
+    public Long getSequencia() {
+        return Sequencia;
+    }
+
+    /**
+     * @param Sequencia the Sequencia to set
+     */
+    public void setSequencia(Long Sequencia) {
+        this.Sequencia = Sequencia;
     }
 }
