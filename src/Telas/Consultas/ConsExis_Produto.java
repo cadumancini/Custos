@@ -5,12 +5,13 @@
  */
 package Telas.Consultas;
 
-import Tabelas.GrupoProduto;
 import Tabelas.Produto;
+import Telas.Cadastros.Cad_Estrutura;
 import Telas.Cadastros.Cad_Produto;
 import Util.HibernateUtil;
 import java.awt.Component;
 import java.util.List;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
@@ -27,7 +28,9 @@ import org.hibernate.criterion.Order;
 public class ConsExis_Produto extends javax.swing.JFrame {
     Session conexao;
     private static ConsExis_Produto instance = null;
-    Cad_Produto janelaPai;
+    Cad_Produto janelaPai_CadProduto;
+    Cad_Estrutura janelaPai_CadEstrutura;
+    String pai;
     /**
      * Creates new form Cons_GrupoProdutoExistentes
      */
@@ -68,8 +71,11 @@ public class ConsExis_Produto extends javax.swing.JFrame {
       return instance;
     }
     
-    public void setJanelaPai(Cad_Produto pai){
-        janelaPai = pai;
+    public void setJanelaPai(JFrame pai, String paiSrc){
+        if(paiSrc.equals("CAD_PRO"))
+            janelaPai_CadProduto = (Cad_Produto) pai;
+        else if(paiSrc.equals("CAD_ESTR"))
+            janelaPai_CadEstrutura = (Cad_Estrutura) pai;
     }
 
     public void resizeColumnWidth(JTable table) {
@@ -217,7 +223,8 @@ public class ConsExis_Produto extends javax.swing.JFrame {
 
     private void SelecionarRegistro(){
         int linha = TblProdutos.getSelectedRow();
-        janelaPai.preencherCampos(TblProdutos.getValueAt(linha, 0).toString());
+        if(pai.equals("CAD_PRO"))
+            janelaPai_CadProduto.preencherCampos(TblProdutos.getValueAt(linha, 0).toString());
         this.dispose();
     }
     
