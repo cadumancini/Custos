@@ -27,9 +27,12 @@
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                  <Component id="BtnProduto" max="32767" attributes="0"/>
-                  <Component id="BtnGrupoProduto" alignment="0" max="32767" attributes="0"/>
-                  <Component id="BtnFornecedor" alignment="0" max="32767" attributes="0"/>
+                  <Component id="BtnEstrutura" max="32767" attributes="0"/>
+                  <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                      <Component id="BtnProduto" max="32767" attributes="0"/>
+                      <Component id="BtnGrupoProduto" alignment="0" max="32767" attributes="0"/>
+                      <Component id="BtnFornecedor" alignment="0" max="32767" attributes="0"/>
+                  </Group>
               </Group>
               <EmptySpace pref="496" max="32767" attributes="0"/>
           </Group>
@@ -44,7 +47,9 @@
               <Component id="BtnFornecedor" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="BtnProduto" min="-2" max="-2" attributes="0"/>
-              <EmptySpace pref="278" max="32767" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="BtnEstrutura" min="-2" max="-2" attributes="0"/>
+              <EmptySpace pref="249" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -72,6 +77,14 @@
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="BtnProdutoActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JButton" name="BtnEstrutura">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Estrutura"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="BtnEstruturaActionPerformed"/>
       </Events>
     </Component>
   </SubComponents>
