@@ -12,6 +12,7 @@ import Telas.Consultas.ConsExis_Produto;
 import java.awt.Component;
 import java.awt.KeyboardFocusManager;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import javax.swing.JOptionPane;
@@ -111,7 +112,7 @@ public class Cad_Estrutura extends javax.swing.JFrame {
                 java.lang.Long.class, java.lang.String.class, java.lang.String.class, java.lang.Double.class
             };
             boolean[] canEdit = new boolean [] {
-                true, false, false, false
+                true, false, false, true
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -122,7 +123,9 @@ public class Cad_Estrutura extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
+        TblEstrutura.setColumnSelectionAllowed(true);
         jScrollPane1.setViewportView(TblEstrutura);
+        TblEstrutura.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
 
         BtnInserirAlterar.setText("Alterar");
         BtnInserirAlterar.setEnabled(false);
@@ -232,7 +235,7 @@ public class Cad_Estrutura extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 709, Short.MAX_VALUE)
+            .addComponent(jScrollPane2)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -266,133 +269,63 @@ public class Cad_Estrutura extends javax.swing.JFrame {
     }//GEN-LAST:event_BtnPesquisarActionPerformed
 
     private void BtnInserirAlterarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnInserirAlterarActionPerformed
-        /*
-        if(TxtDescricao.getText().isEmpty()){
-            JOptionPane.showMessageDialog(this, "O campo de Descrição não deve ficar vazio!", "Erro", JOptionPane.OK_OPTION);
-            TxtDescricao.requestFocusInWindow();
-        } else{
-            // Abrindo conexão:
-            conexao = HibernateUtil.openSession();
-            tx = conexao.beginTransaction();
-
-            Produto produto = new Produto();
-            if(id != -1L)
-            produto.setID(id);
-            produto.setCodigo(TxtCodigo.getText());
-            produto.setDescricao(TxtDescricao.getText());
-
-            // Grupo:
-            if(CmbGrupo.getSelectedIndex() > 0){
-                // Buscar grupo correspondente:
-                String codGrupo = CmbGrupo.getSelectedItem().toString();
-                Criteria crit = conexao.createCriteria(GrupoProduto.class);
-                crit.add(Restrictions.eq("Codigo", codGrupo));
-                List results = crit.list();
-                if(results.size() > 0){
-                    GrupoProduto grupo = (GrupoProduto) results.get(0);
-                    produto.setGrupo(grupo);
-                }
-            } else
-            produto.setGrupo(null);
-
-            // Fornecedor 1:
-            if(CmbFornecedor1.getSelectedIndex() > 0){
-                // Buscar grupo correspondente:
-                String codFornecedor = CmbFornecedor1.getSelectedItem().toString();
-                Criteria crit = conexao.createCriteria(Fornecedor.class);
-                crit.add(Restrictions.eq("Codigo", codFornecedor));
-                List results = crit.list();
-                if(results.size() > 0){
-                    Fornecedor fornec = (Fornecedor) results.get(0);
-                    produto.setFornecedor1(fornec);
-                }
-            } else
-            produto.setFornecedor1(null);
-
-            // Fornecedor 2:
-            if(CmbFornecedor2.getSelectedIndex() > 0){
-                // Buscar grupo correspondente:
-                String codFornecedor = CmbFornecedor2.getSelectedItem().toString();
-                Criteria crit = conexao.createCriteria(Fornecedor.class);
-                crit.add(Restrictions.eq("Codigo", codFornecedor));
-                List results = crit.list();
-                if(results.size() > 0){
-                    Fornecedor fornec = (Fornecedor) results.get(0);
-                    produto.setFornecedor2(fornec);
-                }
-            } else
-            produto.setFornecedor2(null);
-
-            // Fornecedor 3:
-            if(CmbFornecedor3.getSelectedIndex() > 0){
-                // Buscar grupo correspondente:
-                String codFornecedor = CmbFornecedor3.getSelectedItem().toString();
-                Criteria crit = conexao.createCriteria(Fornecedor.class);
-                crit.add(Restrictions.eq("Codigo", codFornecedor));
-                List results = crit.list();
-                if(results.size() > 0){
-                    Fornecedor fornec = (Fornecedor) results.get(0);
-                    produto.setFornecedor3(fornec);
-                }
-            } else
-            produto.setFornecedor3(null);
-
-            produto.setUnidadeMedida(CmbUniMed.getSelectedItem().toString().replace(',', '.'));
-            produto.setAtivo(ChkAtivo.isSelected());
-            if(!FTxtPrecoVenda.getText().isEmpty())
-            produto.setPrecoVenda(Double.valueOf(FTxtPrecoVenda.getText().replace(',', '.')));
-            if(!FTxtPrecoCusto.getText().isEmpty())
-            produto.setPrecoCusto(Double.valueOf(FTxtPrecoCusto.getText().replace(',', '.')));
-            if(!FTxtDevVendas.getText().isEmpty())
-            produto.setDevolucoesVendas(Double.valueOf(FTxtDevVendas.getText().replace(',', '.')));
-            if(!FTxtAbatVendas.getText().isEmpty())
-            produto.setAbatimentosVendas(Double.valueOf(FTxtAbatVendas.getText().replace(',', '.')));
-            if(!FTxtComVendas.getText().isEmpty())
-            produto.setComissoesVendas(Double.valueOf(FTxtComVendas.getText().replace(',', '.')));
-            if(!FTxtIcmsVendas.getText().isEmpty())
-            produto.setIcmsVendas(Double.valueOf(FTxtIcmsVendas.getText().replace(',', '.')));
-            if(!FTxtIpiVendas.getText().isEmpty())
-            produto.setIpiVendas(Double.valueOf(FTxtIpiVendas.getText().replace(',', '.')));
-            if(!FTxtPisVendas.getText().isEmpty())
-            produto.setPisVendas(Double.valueOf(FTxtPisVendas.getText().replace(',', '.')));
-            if(!FTxtCofinsVendas.getText().isEmpty())
-            produto.setCofinsVendas(Double.valueOf(FTxtCofinsVendas.getText().replace(',', '.')));
-            if(!FTxtSimplesVendas.getText().isEmpty())
-            produto.setSimplesVendas(Double.valueOf(FTxtSimplesVendas.getText().replace(',', '.')));
-            if(!FTxtIssVendas.getText().isEmpty())
-            produto.setIssVendas(Double.valueOf(FTxtIssVendas.getText().replace(',', '.')));
-            if(!FTxtIrVendas.getText().isEmpty())
-            produto.setIrVendas(Double.valueOf(FTxtIrVendas.getText().replace(',', '.')));
-            if(!FTxtCsllVendas.getText().isEmpty())
-            produto.setCsllVendas(Double.valueOf(FTxtCsllVendas.getText().replace(',', '.')));
-            if(!FTxtEmbalagem.getText().isEmpty())
-            produto.setEmbalagem(Double.valueOf(FTxtEmbalagem.getText().replace(',', '.')));
-            if(!FTxtFrete.getText().isEmpty())
-            produto.setFreteVendas(Double.valueOf(FTxtFrete.getText().replace(',', '.')));
-            if(!FTxtOutrosInsumos.getText().isEmpty())
-            produto.setOutrosInsumos(Double.valueOf(FTxtOutrosInsumos.getText().replace(',', '.')));
-            if(!FTxtMargemContrib.getText().isEmpty())
-            produto.setMargemContrib(Double.valueOf(FTxtMargemContrib.getText().replace(',', '.')));
-            if(!TxtNcm.getText().isEmpty())
-            produto.setNcm(TxtNcm.getText());
-
-            // Persistindo objeto:
-            try {
-                conexao.saveOrUpdate(produto);
-                tx.commit();
-                TxtCodigo.requestFocusInWindow();
-                TxtCodigo.selectAll();
-                BtnExcluir.setEnabled(true);
-                habilitarCamposCadastro(false);
-                id = produto.getID();
-
-            } catch(Exception ex){
-                tx.rollback();
-                ex.printStackTrace();
-                JOptionPane.showMessageDialog(this, "Operação mal sucedida. Motivo: " + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+        List<Long> sequencias = new ArrayList<>();
+        for(int i = 0; i < TblEstrutura.getRowCount(); i++){
+            if(TblEstrutura.getValueAt(i, 0) == null || (Long) TblEstrutura.getValueAt(i, 0) == 0L){
+                JOptionPane.showMessageDialog(this, "A sequencia do componente, na linha " + (i+1) + " não está preenchida ou está zerada. Verifique!" , "Erro", JOptionPane.OK_OPTION);
+                return;
             }
-            conexao.close();
-        } */
+            if(TblEstrutura.getValueAt(i, 3) == null || (Double) TblEstrutura.getValueAt(i, 3) == 0D){
+                JOptionPane.showMessageDialog(this, "O consumo do componente, na linha " + (i+1) + " não está preenchido ou está zerado. Verifique!" , "Erro", JOptionPane.OK_OPTION);
+                return;
+            }
+            Long seq = (Long) TblEstrutura.getValueAt(i, 0);
+            if(sequencias.contains(seq)){
+                JOptionPane.showMessageDialog(this, "A sequencia informada na linha " + (i+1) + " já foi utilizada em alguma linha anterior. Verifique!" , "Erro", JOptionPane.OK_OPTION);
+                return;
+            } else{
+                sequencias.add(seq);
+            }
+        }
+        
+        // Todas as checagens ok. Limpar estrutura existente e adicionando nova:
+        // Abrindo conexão:
+        conexao = HibernateUtil.openSession();
+        tx = conexao.beginTransaction();
+        try{
+            // Limpando:
+            String codigoModelo = TxtCodigo.getText();
+            Produto modelo = (Produto) conexao.createCriteria(Produto.class).add(Restrictions.eq("Codigo", codigoModelo)).list().get(0);
+            List<Componente> cmps = conexao.createCriteria(Componente.class).add(Restrictions.eq("Modelo", modelo)).list();
+            for(Componente cmp : cmps)
+                conexao.delete(cmp);
+            
+            // Adicionando:
+            for(int i = 0; i < TblEstrutura.getRowCount(); i++){
+                Long seq = (Long) TblEstrutura.getValueAt(i, 0);
+                Produto cmp = (Produto) conexao.createCriteria(Produto.class).add(Restrictions.eq("Codigo", TblEstrutura.getValueAt(i, 1).toString())).list().get(0);
+                Double qtd = (Double) TblEstrutura.getValueAt(i, 3);
+                Componente novoCmp = new Componente();
+                novoCmp.setModelo(modelo);
+                novoCmp.setComponente(cmp);
+                novoCmp.setSequencia(seq);
+                novoCmp.setQuantidade(qtd);
+                conexao.saveOrUpdate(novoCmp);
+            }
+            
+            tx.commit();
+            TxtCodigo.requestFocusInWindow();
+            TxtCodigo.selectAll();
+            BtnInserirAlterar.setEnabled(false);
+            BtnAdicComp.setEnabled(false);
+            BtnExcluir.setEnabled(false);
+            BtnCancelar.setEnabled(false);
+            habilitarCamposCadastro(false);
+            
+        } catch(Exception ex){
+            tx.rollback();
+            JOptionPane.showMessageDialog(this, "Operação mal sucedida. Motivo: " + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_BtnInserirAlterarActionPerformed
 
     private void BtnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnCancelarActionPerformed
