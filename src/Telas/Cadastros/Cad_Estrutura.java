@@ -215,7 +215,7 @@ public class Cad_Estrutura extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 11, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 428, Short.MAX_VALUE))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(BtnInserirAlterar)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -225,8 +225,9 @@ public class Cad_Estrutura extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(BtnExcluir)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(BtnSair)))
-                .addContainerGap(12, Short.MAX_VALUE))
+                        .addComponent(BtnSair)
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
         );
 
         jScrollPane2.setViewportView(jPanel2);
@@ -247,9 +248,9 @@ public class Cad_Estrutura extends javax.swing.JFrame {
 
     private void TxtCodigoKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_TxtCodigoKeyTyped
         if(evt.getKeyChar()== KeyEvent.VK_ENTER || evt.getKeyChar() == KeyEvent.VK_TAB){
-            if(!TxtCodigo.getText().isEmpty()){
+            if(!TxtCodigo.getText().isEmpty())
                 buscar(TxtCodigo.getText());
-            } else{
+            else{
                 JOptionPane.showMessageDialog(this, "O campo de Modelo não deve ficar vazio!", "Erro", JOptionPane.OK_OPTION);
                 TxtCodigo.requestFocusInWindow();
             }
@@ -428,16 +429,27 @@ public class Cad_Estrutura extends javax.swing.JFrame {
     }
     
     public void alimentarTabela(String codigo){
+        if(codigo.equals(TxtCodigo.getText())){
+            JOptionPane.showMessageDialog(this, "O Componente não pode ser igual ao Modelo. Verifique!" , "Erro", JOptionPane.OK_OPTION);
+            return;
+        }
         conexao = HibernateUtil.openSession();
         Criteria crit = conexao.createCriteria(Produto.class);
         crit.add(Restrictions.eq("Codigo", codigo));
         Produto prod = (Produto) crit.list().get(0);
+        Produto modelo = (Produto) conexao.createCriteria(Produto.class).add(Restrictions.eq("Codigo", TxtCodigo.getText())).list().get(0);
+        if(prod.getNivel() >= modelo.getNivel()){
+            JOptionPane.showMessageDialog(this, "O nível do Componente não pode ser igual ou maior ao do Modelo. Verifique!" , "Erro", JOptionPane.OK_OPTION);
+            conexao.close();
+            return;
+        }
         DefaultTableModel model = (DefaultTableModel) TblEstrutura.getModel();
         Object[] linha = new Object[]{null,
                                       prod.getCodigo(),
                                       prod.getDescricao(),
                                       0D};
         model.addRow(linha);
+        conexao.close();
     }
     
     private void limparTabela(){
