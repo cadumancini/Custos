@@ -11,16 +11,11 @@ import Util.HibernateUtil;
 import Telas.Consultas.ConsExis_Produto;
 import java.awt.Component;
 import java.awt.KeyboardFocusManager;
-import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.util.Collections;
 import java.util.List;
-import javax.swing.AbstractAction;
-import javax.swing.ActionMap;
-import javax.swing.InputMap;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
-import javax.swing.KeyStroke;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
@@ -47,59 +42,6 @@ public class Cad_Estrutura extends javax.swing.JFrame {
         limparCampos();
         habilitarCamposCadastro(false);
         TxtCodigo.setFocusTraversalKeys(KeyboardFocusManager.FORWARD_TRAVERSAL_KEYS, Collections.EMPTY_SET); 
-        InputMap im = TblEstrutura.getInputMap();
-        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "Action.NextCell");
-        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_TAB, 0), "Action.NextCell");
-
-        ActionMap am = TblEstrutura.getActionMap();
-        am.put("Action.NextCell", new NextCellActioin(TblEstrutura));
-    }
-    
-    public class NextCellActioin extends AbstractAction {
-
-        private JTable table;
-        public NextCellActioin(JTable table) {
-            this.table = table;
-        }
-
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            int col = table.getSelectedColumn();
-            int row = table.getSelectedRow();
-            int colCount = table.getColumnCount();
-            int rowCount = table.getRowCount();
-
-            if(col == 1){
-                String codigoProduto = table.getValueAt(row, col).toString();
-                // Verificando se o produto existe:
-                conexao = HibernateUtil.openSession();
-                Criteria crit = conexao.createCriteria(Produto.class);
-                crit.add(Restrictions.eq("Codigo", codigoProduto));
-                List results = crit.list();
-                // Verificar se o Produto existe:
-                if(results.size() > 0){
-                    Produto prod = (Produto) results.get(0);
-                    table.setValueAt(prod.getDescricao(), row, (col + 1));
-                } else{
-                    JOptionPane.showMessageDialog(instance, "Produto não encontrado!", "Erro", JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-            }
-            
-            col++;
-            if (col >= colCount) {
-                col = 0;
-                row++;
-            }
-
-            if (row >= rowCount) {
-                row = 0;
-            }
-
-            table.getSelectionModel().setSelectionInterval(row, row);
-            table.getColumnModel().getSelectionModel().setSelectionInterval(col, col);
-        }
-
     }
     
     public static Cad_Estrutura getInstance() {
@@ -131,6 +73,7 @@ public class Cad_Estrutura extends javax.swing.JFrame {
         BtnCancelar = new javax.swing.JButton();
         BtnExcluir = new javax.swing.JButton();
         BtnSair = new javax.swing.JButton();
+        BtnAdicComp = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Cadastro de Estrutura");
@@ -168,7 +111,7 @@ public class Cad_Estrutura extends javax.swing.JFrame {
                 java.lang.Long.class, java.lang.String.class, java.lang.String.class, java.lang.Double.class
             };
             boolean[] canEdit = new boolean [] {
-                true, true, false, false
+                true, false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -197,7 +140,7 @@ public class Cad_Estrutura extends javax.swing.JFrame {
             }
         });
 
-        BtnExcluir.setText("Excluir");
+        BtnExcluir.setText("Excluir Comp.");
         BtnExcluir.setEnabled(false);
         BtnExcluir.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -212,6 +155,14 @@ public class Cad_Estrutura extends javax.swing.JFrame {
             }
         });
 
+        BtnAdicComp.setText("Adicionar Comp.");
+        BtnAdicComp.setEnabled(false);
+        BtnAdicComp.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BtnAdicCompActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -222,8 +173,6 @@ public class Cad_Estrutura extends javax.swing.JFrame {
                     .addComponent(jSeparator1)
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jSeparator2)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 423, Short.MAX_VALUE)
                             .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel1)
@@ -233,17 +182,16 @@ public class Cad_Estrutura extends javax.swing.JFrame {
                                         .addComponent(TxtCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(BtnPesquisar)))
-                                .addGap(0, 0, Short.MAX_VALUE)))
+                                .addGap(0, 314, Short.MAX_VALUE))
+                            .addComponent(jScrollPane1)
+                            .addComponent(jSeparator2))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(BtnInserirAlterar, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addGap(1, 1, 1)
-                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(BtnCancelar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(BtnExcluir, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addComponent(BtnSair, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE))))))
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(BtnInserirAlterar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(BtnAdicComp, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(BtnExcluir, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(BtnCancelar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(BtnSair, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
@@ -269,6 +217,8 @@ public class Cad_Estrutura extends javax.swing.JFrame {
                         .addComponent(BtnInserirAlterar)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(BtnCancelar)
+                        .addGap(7, 7, 7)
+                        .addComponent(BtnAdicComp)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(BtnExcluir)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -282,7 +232,7 @@ public class Cad_Estrutura extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane2)
+            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 709, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -449,43 +399,33 @@ public class Cad_Estrutura extends javax.swing.JFrame {
         if(JOptionPane.showConfirmDialog(this, "Tem certeza que deseja cancelar?", "Confirmação", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION){
             limparCampos();
             habilitarCamposCadastro(false);
-            BtnExcluir.setEnabled(false);
         }
     }//GEN-LAST:event_BtnCancelarActionPerformed
 
     private void BtnExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnExcluirActionPerformed
-        /*
-        if(JOptionPane.showConfirmDialog(this, "Tem certeza que deseja excluir?", "Confirmação", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION){
-            conexao = HibernateUtil.openSession();
-            tx = conexao.beginTransaction();
-
-            Produto produto = (Produto) conexao.get(Produto.class, id);
-
-            try {
-                if(produto != null){
-                    conexao.delete(produto);
-                    tx.commit();
-                } else
-                JOptionPane.showMessageDialog(this, "Impossível excluir. Produto não encontrado.", "Erro", JOptionPane.ERROR_MESSAGE);
-                limparCampos();
-                habilitarCamposCadastro(false);
-                BtnExcluir.setEnabled(false);
-            } catch(Exception ex){
-                tx.rollback();
-                ex.printStackTrace();
-                JOptionPane.showMessageDialog(this, "Operação mal sucedida. Motivo: " + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
-            }
-        } */
+        if(TblEstrutura.getSelectedRow() >= 0){
+            if(JOptionPane.showConfirmDialog(this, "Tem certeza que deseja excluir o componente? Para confirmar a exclusão, é necessário clicar em 'Alterar'.", "Confirmação", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION){
+                DefaultTableModel model = (DefaultTableModel) TblEstrutura.getModel();
+                model.removeRow(TblEstrutura.getSelectedRow());
+            } 
+        } else
+            JOptionPane.showMessageDialog(this, "Nenhuma linha selecionada!", "Erro", JOptionPane.ERROR_MESSAGE);
     }//GEN-LAST:event_BtnExcluirActionPerformed
 
     private void BtnSairActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnSairActionPerformed
         if(JOptionPane.showConfirmDialog(this, "Tem certeza que deseja sair?", "Confirmação", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION){
             limparCampos();
             habilitarCamposCadastro(false);
-            BtnExcluir.setEnabled(false);
             this.dispose();
         }
     }//GEN-LAST:event_BtnSairActionPerformed
+
+    private void BtnAdicCompActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnAdicCompActionPerformed
+        ConsExis_Produto janela = ConsExis_Produto.getInstance();
+        janela.setJanelaPai(this, "CAD_ESTR_ADIC");
+        janela.alimentarTabela();
+        janela.setVisible(true);
+    }//GEN-LAST:event_BtnAdicCompActionPerformed
 
     private void buscar(String codigo){
         habilitarCamposCadastro(true);
@@ -502,7 +442,6 @@ public class Cad_Estrutura extends javax.swing.JFrame {
             if(results.size() > 0){
                 // Existe. Verificar se tem alguma estrutura cadastrada:
                 BtnInserirAlterar.setText("Alterar");
-                BtnExcluir.setEnabled(true);
                 Produto produto = (Produto) results.get(0);
                 Criteria crit2 = conexao.createCriteria(Componente.class);
                 crit2.add(Restrictions.eq("Modelo", produto));
@@ -517,15 +456,13 @@ public class Cad_Estrutura extends javax.swing.JFrame {
                                                       cmp.getQuantidade()};
                         model.addRow(linha);
                     }
-                } else{
-                    // Não existe estrutura cadastrada.
-                    Object[] linha = new Object[]{null,"","",null};
-                    model.addRow(linha);
-                }
+                } 
                 
                 resizeColumnWidth(TblEstrutura);
                 TblEstrutura.requestFocusInWindow();
                 BtnInserirAlterar.setEnabled(true);
+                BtnExcluir.setEnabled(true);
+                BtnAdicComp.setEnabled(true);
                 BtnCancelar.setEnabled(true);
             } else{
                 JOptionPane.showMessageDialog(this, "Produto não encontrado!", "Erro", JOptionPane.ERROR_MESSAGE);
@@ -557,6 +494,19 @@ public class Cad_Estrutura extends javax.swing.JFrame {
         buscar(codigo);
     }
     
+    public void alimentarTabela(String codigo){
+        conexao = HibernateUtil.openSession();
+        Criteria crit = conexao.createCriteria(Produto.class);
+        crit.add(Restrictions.eq("Codigo", codigo));
+        Produto prod = (Produto) crit.list().get(0);
+        DefaultTableModel model = (DefaultTableModel) TblEstrutura.getModel();
+        Object[] linha = new Object[]{null,
+                                      prod.getCodigo(),
+                                      prod.getDescricao(),
+                                      0D};
+        model.addRow(linha);
+    }
+    
     private void limparTabela(){
         int x = TblEstrutura.getRowCount();
         DefaultTableModel model = (DefaultTableModel) TblEstrutura.getModel();
@@ -569,6 +519,8 @@ public class Cad_Estrutura extends javax.swing.JFrame {
         limparTabela();
         TxtCodigo.requestFocusInWindow();
         BtnInserirAlterar.setEnabled(false);
+        BtnAdicComp.setEnabled(false);
+        BtnExcluir.setEnabled(false);
         BtnCancelar.setEnabled(false);
     }
     
@@ -612,6 +564,7 @@ public class Cad_Estrutura extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton BtnAdicComp;
     private javax.swing.JButton BtnCancelar;
     private javax.swing.JButton BtnExcluir;
     private javax.swing.JButton BtnInserirAlterar;
