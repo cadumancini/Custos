@@ -30,6 +30,7 @@ public class ConsExis_Produto extends javax.swing.JFrame {
     private static ConsExis_Produto instance = null;
     Cad_Produto janelaPai_CadProduto;
     Cad_Estrutura janelaPai_CadEstrutura;
+    Cons_Produto janelaPai_ConsProduto;
     String pai;
     /**
      * Creates new form Cons_GrupoProdutoExistentes
@@ -77,6 +78,8 @@ public class ConsExis_Produto extends javax.swing.JFrame {
             janelaPai_CadProduto = (Cad_Produto) pai;
         else if(paiSrc.equals("CAD_ESTR") || paiSrc.equals("CAD_ESTR_ADIC"))
             janelaPai_CadEstrutura = (Cad_Estrutura) pai;
+        else if(paiSrc.equals("CONS_PRO"))
+            janelaPai_ConsProduto = (Cons_Produto) pai;
     }
 
     public void resizeColumnWidth(JTable table) {
