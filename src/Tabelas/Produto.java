@@ -101,6 +101,9 @@ public class Produto implements Serializable {
     
     @Column(nullable=true)
     private String Ncm;
+    
+    @Column(nullable=false)
+    private Long Nivel;
 
     /**
      * @return the ID
@@ -492,5 +495,19 @@ public class Produto implements Serializable {
      */
     public void setAtivo(boolean Ativo) {
         this.Ativo = Ativo;
+    }
+
+    /**
+     * @return the Nivel
+     */
+    public Long getNivel() {
+        return Nivel;
+    }
+
+    /**
+     * @param Nivel the Nivel to set
+     */
+    public void setNivel(Long Nivel) {
+        this.Nivel = Nivel;
     }
 }
