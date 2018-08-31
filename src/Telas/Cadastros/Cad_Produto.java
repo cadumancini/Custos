@@ -153,6 +153,8 @@ public class Cad_Produto extends javax.swing.JFrame {
         LblNcm = new javax.swing.JLabel();
         TxtNcm = new javax.swing.JTextField();
         LblMargem = new javax.swing.JLabel();
+        LblNivel = new javax.swing.JLabel();
+        FTxtNivel = new javax.swing.JFormattedTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Cadastro de Produtos");
@@ -403,11 +405,19 @@ public class Cad_Produto extends javax.swing.JFrame {
         LblNcm.setText("NCM:");
 
         TxtNcm.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        TxtNcm.setNextFocusableComponent(BtnInserirAlterar);
+        TxtNcm.setNextFocusableComponent(FTxtNivel);
 
         LblMargem.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         LblMargem.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         LblMargem.setText("Margem Contrib. (R$):");
+
+        LblNivel.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        LblNivel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        LblNivel.setText("Nível:");
+
+        FTxtNivel.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(java.text.NumberFormat.getIntegerInstance())));
+        FTxtNivel.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        FTxtNivel.setNextFocusableComponent(BtnInserirAlterar);
 
         javax.swing.GroupLayout jPane1Layout = new javax.swing.GroupLayout(jPane1);
         jPane1.setLayout(jPane1Layout);
@@ -540,7 +550,12 @@ public class Cad_Produto extends javax.swing.JFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(jPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(TxtNcm, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(FTxtMargemContrib, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                    .addComponent(FTxtMargemContrib, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPane1Layout.createSequentialGroup()
+                                .addComponent(LblNivel)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(FTxtNivel, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(166, 166, 166)))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -669,7 +684,11 @@ public class Cad_Produto extends javax.swing.JFrame {
                         .addComponent(BtnExcluir)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(BtnSair)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(LblNivel)
+                    .addComponent(FTxtNivel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(28, Short.MAX_VALUE))
         );
 
         jScrollPane1.setViewportView(jPane1);
@@ -715,6 +734,9 @@ public class Cad_Produto extends javax.swing.JFrame {
         if(TxtDescricao.getText().isEmpty()){
             JOptionPane.showMessageDialog(this, "O campo de Descrição não deve ficar vazio!", "Erro", JOptionPane.OK_OPTION);
             TxtDescricao.requestFocusInWindow();
+        } else if(FTxtNivel.getText().isEmpty()){
+            JOptionPane.showMessageDialog(this, "O campo de Nível não deve ficar vazio!", "Erro", JOptionPane.OK_OPTION);
+            FTxtNivel.requestFocusInWindow();
         } else{
             // Abrindo conexão:
             conexao = HibernateUtil.openSession();
@@ -820,6 +842,7 @@ public class Cad_Produto extends javax.swing.JFrame {
                 produto.setMargemContrib(Double.valueOf(FTxtMargemContrib.getText().replace(',', '.')));
             if(!TxtNcm.getText().isEmpty())
                 produto.setNcm(TxtNcm.getText());
+            produto.setNivel(Long.valueOf(FTxtNivel.getText()));
 
             // Persistindo objeto:
             try {
@@ -1014,10 +1037,11 @@ public class Cad_Produto extends javax.swing.JFrame {
                     FTxtMargemContrib.setText(produto.getMargemContrib().toString().replace('.', ','));
                     if(produto.getMargemContrib() - produto.getMargemContrib().intValue() == 0)
                         FTxtMargemContrib.setText(FTxtMargemContrib.getText() + "0");
-                }
+                } 
                 else
                     FTxtMargemContrib.setText("0,00");
                 TxtNcm.setText(produto.getNcm());
+                FTxtNivel.setText(produto.getNivel().toString());
                 id = produto.getID();
             } else{
                 BtnInserirAlterar.setText("Inserir");
@@ -1047,6 +1071,7 @@ public class Cad_Produto extends javax.swing.JFrame {
                 FTxtOutrosInsumos.setText("0,00");
                 FTxtMargemContrib.setText("0,00");
                 TxtNcm.setText("");
+                FTxtNivel.setText("");
                 id = -1L;
             }
         } catch(Exception ex){
@@ -1091,6 +1116,7 @@ public class Cad_Produto extends javax.swing.JFrame {
         FTxtOutrosInsumos.setText("0,00");
         FTxtMargemContrib.setText("0,00");
         TxtNcm.setText("");
+        FTxtNivel.setText("");
         TxtCodigo.requestFocusInWindow();
         BtnInserirAlterar.setEnabled(false);
         BtnInserirAlterar.setText("Inserir");
@@ -1148,6 +1174,8 @@ public class Cad_Produto extends javax.swing.JFrame {
         FTxtMargemContrib.setEnabled(valor);
         LblNcm.setEnabled(valor);
         TxtNcm.setEnabled(valor);
+        LblNivel.setEnabled(valor);
+        FTxtNivel.setEnabled(valor);
     }
     
     /**
@@ -1209,6 +1237,7 @@ public class Cad_Produto extends javax.swing.JFrame {
     private javax.swing.JFormattedTextField FTxtIrVendas;
     private javax.swing.JFormattedTextField FTxtIssVendas;
     private javax.swing.JFormattedTextField FTxtMargemContrib;
+    private javax.swing.JFormattedTextField FTxtNivel;
     private javax.swing.JFormattedTextField FTxtOutrosInsumos;
     private javax.swing.JFormattedTextField FTxtPisVendas;
     private javax.swing.JFormattedTextField FTxtPrecoCusto;
@@ -1235,6 +1264,7 @@ public class Cad_Produto extends javax.swing.JFrame {
     private javax.swing.JLabel LblIss;
     private javax.swing.JLabel LblMargem;
     private javax.swing.JLabel LblNcm;
+    private javax.swing.JLabel LblNivel;
     private javax.swing.JLabel LblPis;
     private javax.swing.JLabel LblPrecoCusto;
     private javax.swing.JLabel LblPrecoVenda;
