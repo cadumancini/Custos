@@ -5,7 +5,23 @@
  */
 package Telas.Consultas;
 
+import Tabelas.GrupoProduto;
+import Tabelas.Produto;
+import Telas.Cadastros.Cad_Produto;
+import Util.HibernateUtil;
+import java.awt.Component;
+import static java.awt.Frame.MAXIMIZED_BOTH;
+import java.util.List;
+import javax.swing.JOptionPane;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumnModel;
+import org.hibernate.Criteria;
 import org.hibernate.Session;
+import org.hibernate.criterion.MatchMode;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
 
 /**
  *
@@ -128,10 +144,7 @@ public class Cons_Produto extends javax.swing.JFrame {
 
         TblProdutos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null}
+
             },
             new String [] {
                 "Código", "Descrição", "Grupo", "Fornecedor 1", "Fornecedor 2", "Fornecedor 3", "Uni. Med.", "Ativo", "Preço Venda (R$)", "Preço Custo (R$)", "Devoluções Vendas (%)", "Abatimentos Vendas (%)", "Comissões Vendas (%)", "ICMS Vendas (%)", "IPI Vendas (%)", "PIS Vendas (%)", "Cofins Vendas (%)", "Simples Vendas (%)", "ISS Vendas (%)", "IR Vendas (%)", "CSLL Vendas (%)", "Embalagem (%)", "Frete Vendas (%)", "Outros Insumos (%)", "Margem Contribuição (R$)", "NCM", "Nível"
@@ -173,21 +186,26 @@ public class Cons_Produto extends javax.swing.JFrame {
                     .addComponent(jSeparator1, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jSeparator2, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                .addComponent(LblCodigo2)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(CmbGrupo, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                .addComponent(LblCodigo)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(TxtCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel1)
+                            .addComponent(BtnCadastro, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(jScrollPane1)
+                    .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addGap(2, 2, 2)
-                                .addComponent(BtnPesquisarExis)
+                                .addComponent(LblCodigo)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(TxtCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(BtnPesquisarExis, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addComponent(LblCodigo2)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(CmbGrupo, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
                                 .addComponent(LblCodigo1)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(CmbDescricao, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -197,17 +215,16 @@ public class Cons_Produto extends javax.swing.JFrame {
                                 .addComponent(LblCodigo3)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(CmbAtivo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 338, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(BtnCancelar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(BtnPesquisar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(BtnSair, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1)
-                            .addComponent(BtnCadastro, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(jScrollPane1))
+                            .addGroup(layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(BtnPesquisar, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(BtnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(BtnSair, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -219,6 +236,13 @@ public class Cons_Produto extends javax.swing.JFrame {
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 5, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(BtnPesquisar)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(BtnCancelar)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(BtnSair)
+                        .addGap(16, 16, 16))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(LblCodigo)
@@ -226,23 +250,17 @@ public class Cons_Produto extends javax.swing.JFrame {
                             .addComponent(CmbDescricao, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(TxtDescricao, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(LblCodigo1)
-                            .addComponent(BtnPesquisarExis, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(BtnPesquisarExis, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(CmbGrupo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(LblCodigo3)
                             .addComponent(CmbAtivo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(LblCodigo2)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(BtnPesquisar)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(BtnCancelar)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(BtnSair)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(LblCodigo2))
+                        .addGap(37, 37, 37)))
                 .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 12, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 471, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 374, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(BtnCadastro)
                 .addContainerGap())
@@ -252,25 +270,149 @@ public class Cons_Produto extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void BtnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnCancelarActionPerformed
-        if(JOptionPane.showConfirmDialog(this, "Tem certeza que deseja cancelar?", "Confirmação", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION)
+        if(JOptionPane.showConfirmDialog(this, "Tem certeza que deseja cancelar?", "Confirmação", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION){
             limparCampos();
+            limparTabela();
+        }
     }//GEN-LAST:event_BtnCancelarActionPerformed
 
     private void BtnSairActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnSairActionPerformed
         if(JOptionPane.showConfirmDialog(this, "Tem certeza que deseja sair?", "Confirmação", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION){
             limparCampos();
-            habilitarCamposCadastro(false);
-            BtnExcluir.setEnabled(false);
             this.dispose();
         }
     }//GEN-LAST:event_BtnSairActionPerformed
 
     private void BtnPesquisarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnPesquisarActionPerformed
-        // TODO add your handling code here:
+        conexao = HibernateUtil.openSession();
+        
+        limparTabela();
+        DefaultTableModel model = (DefaultTableModel) TblProdutos.getModel();
+        
+        String codigo = TxtCodigo.getText();
+        String descricao = TxtDescricao.getText();
+        boolean ativo;
+        
+        Criteria crit = conexao.createCriteria(Produto.class);
+        if(!codigo.isEmpty())
+            crit.add(Restrictions.eq("Codigo", codigo));
+        if(!descricao.isEmpty()){
+            switch(CmbDescricao.getSelectedIndex()){
+                case 0:
+                    //É exatamente
+                    crit.add(Restrictions.eq("Descricao", descricao));
+                    break;
+                case 1:
+                    //Começa com
+                    crit.add(Restrictions.like("Descricao", descricao, MatchMode.START));
+                    break;
+                case 2:
+                    //Contém
+                    crit.add(Restrictions.like("Descricao", descricao, MatchMode.ANYWHERE));
+                    break;
+                default:
+                    //Termina com
+                    crit.add(Restrictions.like("Descricao", descricao, MatchMode.END));
+                    break;
+            }
+        }
+        if(CmbGrupo.getSelectedIndex() > 0)
+            crit.add(Restrictions.eq("Grupo", (GrupoProduto) conexao.createCriteria(GrupoProduto.class).add(Restrictions.eq("Codigo", CmbGrupo.getSelectedItem())).list().get(0)));
+        if(CmbAtivo.getSelectedIndex() > 0){
+            if(CmbAtivo.getSelectedIndex() == 1)
+                ativo = true;
+            else
+                ativo = false;
+            crit.add(Restrictions.eq("Ativo", ativo));
+        }
+        
+        crit.addOrder(Order.asc("Codigo"));
+        
+        List<Produto> produtos = crit.list();
+        if(produtos.isEmpty())
+            JOptionPane.showMessageDialog(this, "Nenhum produto encontrado!", "Erro", JOptionPane.ERROR_MESSAGE);
+        else{
+            for(Produto prod : produtos){
+                codigo = prod.getCodigo();
+                descricao = prod.getDescricao();
+                String grupo = "", forn1 = "", forn2 = "", forn3 = "";
+                if(prod.getGrupo() != null)
+                    grupo = prod.getGrupo().getDescricao();
+                if(prod.getFornecedor1() != null)
+                    forn1 = prod.getFornecedor1().getNome();
+                if(prod.getFornecedor2() != null)
+                    forn2 = prod.getFornecedor2().getNome();
+                if(prod.getFornecedor3() != null)
+                    forn3 = prod.getFornecedor3().getNome();
+                String uniMed = prod.getUnidadeMedida();
+                String prodAtivo = "Não";
+                if(prod.isAtivo())
+                    prodAtivo = "Sim";
+                Double precVen = 0D, precCus = 0D, devVen = 0D, abatVen = 0D, comiVen = 0D, icmsVen = 0D,
+                        ipiVen = 0D, pisVen = 0D, cofVen = 0D, simVen = 0D, issVen = 0D, irVen = 0D, csllVen = 0D,
+                        embal = 0D, freVen = 0D, outIns = 0D, marCon = 0D;
+                String ncm = "";
+                Long nivel = 0L;
+                if(prod.getPrecoVenda() != null)
+                    precVen = prod.getPrecoVenda();
+                if(prod.getPrecoCusto() != null)
+                    precCus = prod.getPrecoCusto();
+                if(prod.getDevolucoesVendas()!= null)
+                    devVen = prod.getDevolucoesVendas();
+                if(prod.getAbatimentosVendas()!= null)
+                    abatVen = prod.getAbatimentosVendas();
+                if(prod.getComissoesVendas()!= null)
+                    comiVen = prod.getComissoesVendas();
+                if(prod.getIcmsVendas()!= null)
+                    icmsVen = prod.getIcmsVendas();
+                if(prod.getIpiVendas()!= null)
+                    ipiVen = prod.getIpiVendas();
+                if(prod.getPisVendas()!= null)
+                    pisVen = prod.getPisVendas();
+                if(prod.getCofinsVendas()!= null)
+                    cofVen = prod.getCofinsVendas();
+                if(prod.getSimplesVendas()!= null)
+                    simVen = prod.getSimplesVendas();
+                if(prod.getIssVendas()!= null)
+                    issVen = prod.getIssVendas();
+                if(prod.getIrVendas()!= null)
+                    irVen = prod.getIrVendas();
+                if(prod.getCsllVendas()!= null)
+                    csllVen = prod.getCsllVendas();
+                if(prod.getEmbalagem()!= null)
+                    embal = prod.getEmbalagem();
+                if(prod.getFreteVendas()!= null)
+                    freVen = prod.getFreteVendas();
+                if(prod.getOutrosInsumos()!= null)
+                    outIns = prod.getOutrosInsumos();
+                if(prod.getMargemContrib()!= null)
+                    marCon = prod.getMargemContrib();
+                if(prod.getNcm()!= null)
+                    ncm = prod.getNcm();
+                if(prod.getNivel() != null)
+                    nivel = prod.getNivel();
+                
+                Object[] linha = new Object[]{codigo, descricao, grupo, forn1, forn2, forn3, uniMed, prodAtivo, precVen, precCus, devVen, abatVen, comiVen,
+                                                icmsVen, ipiVen, pisVen, cofVen, simVen, issVen, irVen, csllVen, embal, freVen, outIns, marCon, ncm, nivel};
+                model.addRow(linha);
+            }
+            resizeColumnWidth(TblProdutos);
+        }
+        
+        conexao.close();
     }//GEN-LAST:event_BtnPesquisarActionPerformed
 
     private void BtnCadastroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnCadastroActionPerformed
-        // TODO add your handling code here:
+        if(TblProdutos.getSelectedRow() < 0)
+            JOptionPane.showMessageDialog(this, "Nenhum produto selecionado!", "Erro", JOptionPane.ERROR_MESSAGE);
+        else{
+            String produto = TblProdutos.getValueAt(TblProdutos.getSelectedRow(), 0).toString();
+            Cad_Produto tela = Cad_Produto.getInstance();
+            tela.AtualizaCombos();
+            tela.preencherCampos(produto);
+            tela.setVisible(true);
+            tela.setExtendedState(this.getExtendedState() | MAXIMIZED_BOTH);
+        }
     }//GEN-LAST:event_BtnCadastroActionPerformed
 
     private void BtnPesquisarExisActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnPesquisarExisActionPerformed
@@ -290,7 +432,45 @@ public class Cons_Produto extends javax.swing.JFrame {
     }
     
     private void limparTabela(){
+        int x = TblProdutos.getRowCount();
+        DefaultTableModel model = (DefaultTableModel) TblProdutos.getModel();
+        for(int i = 0; i < x; i++)
+            model.removeRow(0);
+    }
+    
+    public void preencherCampos(String codigo){
+        TxtCodigo.setText(codigo);
+    }
+    
+    public void resizeColumnWidth(JTable table) {
+        final TableColumnModel columnModel = table.getColumnModel();
+        for (int column = 0; column < table.getColumnCount(); column++) {
+            int width = 50; // Min width
+            for (int row = 0; row < table.getRowCount(); row++) {
+                TableCellRenderer renderer = table.getCellRenderer(row, column);
+                Component comp = table.prepareRenderer(renderer, row, column);
+                width = Math.max(comp.getPreferredSize().width, width);
+            }
+            columnModel.getColumn(column).setPreferredWidth(width);
+        }
+    }
+    
+    public void AtualizaCombos(){
+        CmbGrupo.removeAllItems();
         
+        // Abrindo conexão:
+        conexao = HibernateUtil.openSession();
+        
+        // Buscando e preenchendo grupos:
+        Criteria crit = conexao.createCriteria(GrupoProduto.class);
+        crit.addOrder(Order.asc("Codigo"));
+        List<GrupoProduto> grupos = crit.list();
+        CmbGrupo.addItem("Selecione o Grupo");
+        for(GrupoProduto grupo : grupos)
+            CmbGrupo.addItem(grupo.getCodigo());
+        
+        // Fechando conexão:
+        conexao.close();
     }
     
     /**
