@@ -233,6 +233,8 @@ public class ConsExis_Produto extends javax.swing.JFrame {
             janelaPai_CadEstrutura.preencherCampos(TblProdutos.getValueAt(linha, 0).toString());
         else if(pai.equals("CAD_ESTR_ADIC"))
             janelaPai_CadEstrutura.alimentarTabela(TblProdutos.getValueAt(linha, 0).toString());
+        else if(pai.equals("CONS_PRO"))
+            janelaPai_ConsProduto.preencherCampos(TblProdutos.getValueAt(linha, 0).toString());
         this.dispose();
     }
     
