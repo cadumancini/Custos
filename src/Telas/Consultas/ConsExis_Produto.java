@@ -9,6 +9,7 @@ import Tabelas.Produto;
 import Telas.Cadastros.Cad_Estrutura;
 import Telas.Cadastros.Cad_Produto;
 import Util.HibernateUtil;
+import Util.TableColumnAdjuster;
 import java.awt.Component;
 import java.util.List;
 import javax.swing.JFrame;
@@ -33,11 +34,15 @@ public class ConsExis_Produto extends javax.swing.JFrame {
     Cons_Produto janelaPai_ConsProduto;
     Cons_Estrutura janelaPai_ConsEstrutura;
     String pai;
+    TableColumnAdjuster tca;
     /**
      * Creates new form Cons_GrupoProdutoExistentes
      */
     public ConsExis_Produto() {
         initComponents();  
+        TblProdutos.setAutoCreateRowSorter(true);
+        tca = new TableColumnAdjuster(TblProdutos);
+        tca.adjustColumns();
     }
     
     public void alimentarTabela(){
@@ -58,6 +63,7 @@ public class ConsExis_Produto extends javax.swing.JFrame {
                 String[] linha = new String[]{produto.getCodigo(), produto.getDescricao()};
                 model.addRow(linha);
             }
+            tca.adjustColumns();
             conexao.close();
         } catch(Exception e){
             JOptionPane.showMessageDialog(this, "Operação mal sucedida. Motivo: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
