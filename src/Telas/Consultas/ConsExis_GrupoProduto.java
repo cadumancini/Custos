@@ -32,6 +32,7 @@ public class ConsExis_GrupoProduto extends javax.swing.JFrame {
      */
     public ConsExis_GrupoProduto() {
         initComponents();  
+        TblGrupos.setAutoCreateRowSorter(true);
     }
     
     public void alimentarTabela(){
