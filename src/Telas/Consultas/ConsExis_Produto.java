@@ -31,6 +31,7 @@ public class ConsExis_Produto extends javax.swing.JFrame {
     Cad_Produto janelaPai_CadProduto;
     Cad_Estrutura janelaPai_CadEstrutura;
     Cons_Produto janelaPai_ConsProduto;
+    Cons_Estrutura janelaPai_ConsEstrutura;
     String pai;
     /**
      * Creates new form Cons_GrupoProdutoExistentes
@@ -74,12 +75,23 @@ public class ConsExis_Produto extends javax.swing.JFrame {
     
     public void setJanelaPai(JFrame pai, String paiSrc){
         this.pai = paiSrc;
-        if(paiSrc.equals("CAD_PRO"))
-            janelaPai_CadProduto = (Cad_Produto) pai;
-        else if(paiSrc.equals("CAD_ESTR") || paiSrc.equals("CAD_ESTR_ADIC"))
-            janelaPai_CadEstrutura = (Cad_Estrutura) pai;
-        else if(paiSrc.equals("CONS_PRO"))
-            janelaPai_ConsProduto = (Cons_Produto) pai;
+        switch (paiSrc) {
+            case "CAD_PRO":
+                janelaPai_CadProduto = (Cad_Produto) pai;
+                break;
+            case "CAD_ESTR":
+            case "CAD_ESTR_ADIC":
+                janelaPai_CadEstrutura = (Cad_Estrutura) pai;
+                break;
+            case "CONS_PRO":
+                janelaPai_ConsProduto = (Cons_Produto) pai;
+                break;
+            case "CONS_ESTR":
+                janelaPai_ConsEstrutura = (Cons_Estrutura) pai;
+                break;
+            default:
+                break;
+        }
     }
 
     public void resizeColumnWidth(JTable table) {
@@ -227,14 +239,25 @@ public class ConsExis_Produto extends javax.swing.JFrame {
 
     private void SelecionarRegistro(){
         int linha = TblProdutos.getSelectedRow();
-        if(pai.equals("CAD_PRO"))
-            janelaPai_CadProduto.preencherCampos(TblProdutos.getValueAt(linha, 0).toString());
-        else if(pai.equals("CAD_ESTR"))
-            janelaPai_CadEstrutura.preencherCampos(TblProdutos.getValueAt(linha, 0).toString());
-        else if(pai.equals("CAD_ESTR_ADIC"))
-            janelaPai_CadEstrutura.alimentarTabela(TblProdutos.getValueAt(linha, 0).toString());
-        else if(pai.equals("CONS_PRO"))
-            janelaPai_ConsProduto.preencherCampos(TblProdutos.getValueAt(linha, 0).toString());
+        switch (pai) {
+            case "CAD_PRO":
+                janelaPai_CadProduto.preencherCampos(TblProdutos.getValueAt(linha, 0).toString());
+                break;
+            case "CAD_ESTR":
+                janelaPai_CadEstrutura.preencherCampos(TblProdutos.getValueAt(linha, 0).toString());
+                break;
+            case "CAD_ESTR_ADIC":
+                janelaPai_CadEstrutura.alimentarTabela(TblProdutos.getValueAt(linha, 0).toString());
+                break;
+            case "CONS_PRO":
+                janelaPai_ConsProduto.preencherCampos(TblProdutos.getValueAt(linha, 0).toString());
+                break;
+            case "CONS_ESTR":
+                janelaPai_ConsEstrutura.preencherCampos(TblProdutos.getValueAt(linha, 0).toString());
+                break;
+            default:
+                break;
+        }
         this.dispose();
     }
     
