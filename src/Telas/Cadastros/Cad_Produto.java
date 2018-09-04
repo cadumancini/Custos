@@ -183,6 +183,11 @@ public class Cad_Produto extends javax.swing.JFrame {
         BtnInserirAlterar.setText("Inserir");
         BtnInserirAlterar.setEnabled(false);
         BtnInserirAlterar.setNextFocusableComponent(BtnCancelar);
+        BtnInserirAlterar.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                BtnInserirAlterarFocusGained(evt);
+            }
+        });
         BtnInserirAlterar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 BtnInserirAlterarActionPerformed(evt);
@@ -932,6 +937,10 @@ public class Cad_Produto extends javax.swing.JFrame {
             this.dispose();
         }
     }//GEN-LAST:event_BtnSairActionPerformed
+
+    private void BtnInserirAlterarFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_BtnInserirAlterarFocusGained
+        jScrollPane1.getVerticalScrollBar().setValue(jScrollPane1.getVerticalScrollBar().getMinimum());
+    }//GEN-LAST:event_BtnInserirAlterarFocusGained
 
     private void buscar(String codigo){
         habilitarCamposCadastro(true);
