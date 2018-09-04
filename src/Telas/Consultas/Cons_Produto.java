@@ -9,6 +9,7 @@ import Tabelas.GrupoProduto;
 import Tabelas.Produto;
 import Telas.Cadastros.Cad_Produto;
 import Util.HibernateUtil;
+import Util.TableColumnAdjuster;
 import java.awt.Component;
 import static java.awt.Frame.MAXIMIZED_BOTH;
 import java.util.List;
@@ -30,6 +31,7 @@ import org.hibernate.criterion.Restrictions;
 public class Cons_Produto extends javax.swing.JFrame {
     Session conexao;
     private static Cons_Produto instance = null;
+    TableColumnAdjuster tca;
     
     /**
      * Creates new form Cons_Produto
@@ -38,6 +40,8 @@ public class Cons_Produto extends javax.swing.JFrame {
         initComponents();
         
         TblProdutos.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+        tca = new TableColumnAdjuster(TblProdutos);
+        tca.adjustColumns();
     }
 
     public static Cons_Produto getInstance() {
@@ -404,7 +408,8 @@ public class Cons_Produto extends javax.swing.JFrame {
                                                 icmsVen, ipiVen, pisVen, cofVen, simVen, issVen, irVen, csllVen, embal, freVen, outIns, marCon, ncm, nivel};
                 model.addRow(linha);
             }
-            resizeColumnWidth(TblProdutos);
+            //resizeColumnWidth(TblProdutos);
+            tca.adjustColumns();
         }
         
         conexao.close();
