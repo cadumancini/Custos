@@ -9,14 +9,17 @@ import Tabelas.Componente;
 import Tabelas.Produto;
 import Util.HibernateUtil;
 import Telas.Consultas.ConsExis_Produto;
+import Util.TableColumnAdjuster;
 import java.awt.Component;
 import java.awt.KeyboardFocusManager;
 import java.awt.event.KeyEvent;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
@@ -34,6 +37,7 @@ public class Cad_Estrutura extends javax.swing.JFrame {
     private static Cad_Estrutura instance = null;
     Session conexao;
     Transaction tx;
+    TableColumnAdjuster tca;
     
     /**
      * Creates new form Cad_Estrutura
@@ -43,6 +47,9 @@ public class Cad_Estrutura extends javax.swing.JFrame {
         limparCampos();
         habilitarCamposCadastro(false);
         TxtCodigo.setFocusTraversalKeys(KeyboardFocusManager.FORWARD_TRAVERSAL_KEYS, Collections.EMPTY_SET); 
+        TblEstrutura.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+        tca = new TableColumnAdjuster(TblEstrutura);
+        tca.adjustColumns();
     }
     
     public static Cad_Estrutura getInstance() {
@@ -50,7 +57,7 @@ public class Cad_Estrutura extends javax.swing.JFrame {
            instance = new Cad_Estrutura();
         return instance;
     }
-
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -390,6 +397,7 @@ public class Cad_Estrutura extends javax.swing.JFrame {
                                                       cmp.getQuantidade()};
                         model.addRow(linha);
                     }
+                    tca.adjustColumns();
                 } 
                 
                 resizeColumnWidth(TblEstrutura);
@@ -449,6 +457,7 @@ public class Cad_Estrutura extends javax.swing.JFrame {
                                       prod.getDescricao(),
                                       0D};
         model.addRow(linha);
+        tca.adjustColumns();
         conexao.close();
     }
     
