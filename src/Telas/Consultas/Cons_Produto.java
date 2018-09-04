@@ -40,6 +40,7 @@ public class Cons_Produto extends javax.swing.JFrame {
         initComponents();
         
         TblProdutos.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+        TblProdutos.setAutoCreateRowSorter(true);
         tca = new TableColumnAdjuster(TblProdutos);
         tca.adjustColumns();
     }
@@ -160,11 +161,11 @@ public class Cons_Produto extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Código", "Descrição", "Grupo", "Fornecedor 1", "Fornecedor 2", "Fornecedor 3", "Uni. Med.", "Ativo", "Preço Venda (R$)", "Preço Custo (R$)", "Devoluções Vendas (%)", "Abatimentos Vendas (%)", "Comissões Vendas (%)", "ICMS Vendas (%)", "IPI Vendas (%)", "PIS Vendas (%)", "Cofins Vendas (%)", "Simples Vendas (%)", "ISS Vendas (%)", "IR Vendas (%)", "CSLL Vendas (%)", "Embalagem (%)", "Frete Vendas (%)", "Outros Insumos (%)", "Margem Contribuição (R$)", "NCM", "Nível"
+                "Código", "Descrição", "Grupo", "Nível", "Fornecedor 1", "Fornecedor 2", "Fornecedor 3", "Uni. Med.", "Ativo", "Preço Venda (R$)", "Preço Custo (R$)", "Devoluções Vendas (%)", "Abatimentos Vendas (%)", "Comissões Vendas (%)", "ICMS Vendas (%)", "IPI Vendas (%)", "PIS Vendas (%)", "Cofins Vendas (%)", "Simples Vendas (%)", "ISS Vendas (%)", "IR Vendas (%)", "CSLL Vendas (%)", "Embalagem (%)", "Frete Vendas (%)", "Outros Insumos (%)", "Margem Contribuição (R$)", "NCM"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Double.class, java.lang.Double.class, java.lang.Double.class, java.lang.Double.class, java.lang.Double.class, java.lang.Double.class, java.lang.Double.class, java.lang.Double.class, java.lang.Double.class, java.lang.Double.class, java.lang.Double.class, java.lang.Double.class, java.lang.Double.class, java.lang.Double.class, java.lang.Double.class, java.lang.Double.class, java.lang.Double.class, java.lang.String.class, java.lang.Long.class
+                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Long.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Double.class, java.lang.Double.class, java.lang.Double.class, java.lang.Double.class, java.lang.Double.class, java.lang.Double.class, java.lang.Double.class, java.lang.Double.class, java.lang.Double.class, java.lang.Double.class, java.lang.Double.class, java.lang.Double.class, java.lang.Double.class, java.lang.Double.class, java.lang.Double.class, java.lang.Double.class, java.lang.Double.class, java.lang.String.class
             };
             boolean[] canEdit = new boolean [] {
                 false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false
@@ -184,10 +185,10 @@ public class Cons_Produto extends javax.swing.JFrame {
             TblProdutos.getColumnModel().getColumn(0).setMinWidth(80);
             TblProdutos.getColumnModel().getColumn(1).setMinWidth(80);
             TblProdutos.getColumnModel().getColumn(2).setMinWidth(60);
-            TblProdutos.getColumnModel().getColumn(3).setMinWidth(60);
             TblProdutos.getColumnModel().getColumn(4).setMinWidth(60);
             TblProdutos.getColumnModel().getColumn(5).setMinWidth(60);
-            TblProdutos.getColumnModel().getColumn(6).setMinWidth(50);
+            TblProdutos.getColumnModel().getColumn(6).setMinWidth(60);
+            TblProdutos.getColumnModel().getColumn(7).setMinWidth(50);
         }
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -404,8 +405,8 @@ public class Cons_Produto extends javax.swing.JFrame {
                 if(prod.getNivel() != null)
                     nivel = prod.getNivel();
                 
-                Object[] linha = new Object[]{codigo, descricao, grupo, forn1, forn2, forn3, uniMed, prodAtivo, precVen, precCus, devVen, abatVen, comiVen,
-                                                icmsVen, ipiVen, pisVen, cofVen, simVen, issVen, irVen, csllVen, embal, freVen, outIns, marCon, ncm, nivel};
+                Object[] linha = new Object[]{codigo, descricao, grupo, nivel, forn1, forn2, forn3, uniMed, prodAtivo, precVen, precCus, devVen, abatVen, comiVen,
+                                                icmsVen, ipiVen, pisVen, cofVen, simVen, issVen, irVen, csllVen, embal, freVen, outIns, marCon, ncm};
                 model.addRow(linha);
             }
             //resizeColumnWidth(TblProdutos);
