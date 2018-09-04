@@ -32,6 +32,7 @@ public class ConsExis_Fornecedor extends javax.swing.JFrame {
      */
     public ConsExis_Fornecedor() {
         initComponents();  
+        TblFornecedores.setAutoCreateRowSorter(true);
     }
     
     public void alimentarTabela(){
