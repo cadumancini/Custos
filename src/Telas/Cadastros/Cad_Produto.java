@@ -415,7 +415,7 @@ public class Cad_Produto extends javax.swing.JFrame {
         LblNivel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         LblNivel.setText("Nível:");
 
-        FTxtNivel.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(java.text.NumberFormat.getIntegerInstance())));
+        FTxtNivel.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("###0"))));
         FTxtNivel.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         FTxtNivel.setNextFocusableComponent(BtnInserirAlterar);
 
