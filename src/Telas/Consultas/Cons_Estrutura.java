@@ -11,7 +11,6 @@ import Util.HibernateUtil;
 import javax.swing.JOptionPane;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
-import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Restrictions;
 
 /**
@@ -21,6 +20,8 @@ import org.hibernate.criterion.Restrictions;
 public class Cons_Estrutura extends javax.swing.JFrame {
     Session conexao;
     private static Cons_Estrutura instance = null;
+    private int nivel;
+    private String espaco;
     
     /**
      * Creates new form Cons_Estrutura
@@ -97,6 +98,7 @@ public class Cons_Estrutura extends javax.swing.JFrame {
             }
         });
 
+        TxtEstrutura.setEditable(false);
         TxtEstrutura.setColumns(20);
         TxtEstrutura.setRows(5);
         jScrollPane1.setViewportView(TxtEstrutura);
@@ -165,15 +167,23 @@ public class Cons_Estrutura extends javax.swing.JFrame {
     }//GEN-LAST:event_BtnPesquisarExisActionPerformed
 
     private void BtnPesquisarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnPesquisarActionPerformed
+        if(TxtCodigo.getText().isEmpty()){
+            JOptionPane.showMessageDialog(this, "O código do Modelo não pode ficar em branco!", "Erro", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
         conexao = HibernateUtil.openSession();
         TxtEstrutura.setText("");
-        Produto prod = (Produto) conexao.createCriteria(Produto.class)
-                .add(Restrictions.eq("Codigo", TxtCodigo.getText())).list().get(0);
-        if(prod == null)
-             JOptionPane.showMessageDialog(this, "Nenhuma estrutura encontrada!", "Erro", JOptionPane.ERROR_MESSAGE);
+        nivel = 0;
+        Criteria crit = conexao.createCriteria(Produto.class).add(Restrictions.eq("Codigo", TxtCodigo.getText()));
+        if(crit.list().isEmpty()){
+            JOptionPane.showMessageDialog(this, "Nenhuma estrutura encontrada!", "Erro", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
         else{
-            String cmpTxt = prod.getDescricao();
-            TxtEstrutura.setText(prod.getDescricao());
+            Produto prod = (Produto) crit.list().get(0);
+            String cmpTxt = prod.getCodigo() + " - " + prod.getDescricao();
+            TxtEstrutura.setText(cmpTxt);
+            nivel++;
             estrutura(prod, cmpTxt);
         }
         conexao.close();
@@ -181,15 +191,21 @@ public class Cons_Estrutura extends javax.swing.JFrame {
 
     public void estrutura(Produto prod, String cmpTxt){
         for(Componente cmp : prod.getComponentes()){
+            espaco = "";
+            for(int i = 0; i < nivel; i++)
+                espaco += "  ";
             String strTmp = cmpTxt;
-            cmpTxt += " => " + cmp.getComponente().getDescricao();
+            cmpTxt = espaco + " '--> " + cmp.getComponente().getCodigo() + " - " 
+                    + cmp.getComponente().getDescricao() + " -> Qtd.: " + cmp.getQuantidade().toString(); 
             Produto prod2 = (Produto) HibernateUtil.openSession().createCriteria(Produto.class)
                     .add(Restrictions.eq("Codigo", cmp.getComponente().getCodigo()))
                     .list().get(0);
             TxtEstrutura.setText(TxtEstrutura.getText() + "\r\n" + cmpTxt);
             if(prod2.getComponentes().size() > 0){
                 prod = prod2;
+                nivel++;
                 estrutura(prod, cmpTxt);
+                nivel--;
             } 
             cmpTxt = strTmp;
         }
