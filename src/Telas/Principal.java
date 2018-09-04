@@ -9,6 +9,7 @@ import Telas.Cadastros.Cad_Estrutura;
 import Telas.Cadastros.Cad_Fornecedor;
 import Telas.Cadastros.Cad_GrupoProduto;
 import Telas.Cadastros.Cad_Produto;
+import Telas.Consultas.Cons_Estrutura;
 import Telas.Consultas.Cons_Produto;
 
 /**
@@ -41,6 +42,7 @@ public class Principal extends javax.swing.JFrame {
         BtnProduto = new javax.swing.JButton();
         BtnEstrutura = new javax.swing.JButton();
         BtnConsPro = new javax.swing.JButton();
+        BtnConsEstr = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Custos");
@@ -80,6 +82,13 @@ public class Principal extends javax.swing.JFrame {
             }
         });
 
+        BtnConsEstr.setText("Consulta Estrutura");
+        BtnConsEstr.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BtnConsEstrActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -87,8 +96,9 @@ public class Principal extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(BtnConsPro, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(BtnConsEstr, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addComponent(BtnConsPro, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(BtnEstrutura, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(BtnProduto, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(BtnGrupoProduto, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -108,7 +118,9 @@ public class Principal extends javax.swing.JFrame {
                 .addComponent(BtnEstrutura)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(BtnConsPro)
-                .addContainerGap(220, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(BtnConsEstr)
+                .addContainerGap(191, Short.MAX_VALUE))
         );
 
         pack();
@@ -146,6 +158,12 @@ public class Principal extends javax.swing.JFrame {
         tela.setExtendedState(this.getExtendedState() | MAXIMIZED_BOTH);
     }//GEN-LAST:event_BtnConsProActionPerformed
 
+    private void BtnConsEstrActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnConsEstrActionPerformed
+        Cons_Estrutura tela = Cons_Estrutura.getInstance();
+        tela.setVisible(true);
+        tela.setExtendedState(this.getExtendedState() | MAXIMIZED_BOTH);
+    }//GEN-LAST:event_BtnConsEstrActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -182,6 +200,7 @@ public class Principal extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton BtnConsEstr;
     private javax.swing.JButton BtnConsPro;
     private javax.swing.JButton BtnEstrutura;
     private javax.swing.JButton BtnFornecedor;
